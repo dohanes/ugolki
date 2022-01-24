@@ -2,7 +2,9 @@
     width: 60px;
     height: 60px;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
+    text-align: center;
+    display: table-cell;
 }
 
 
@@ -20,4 +22,19 @@
 
 .row:nth-of-type(even) .square:nth-of-type(even) {
     background-color: #FFCE9E;
+}
+
+.token {
+    width: 60%;
+    height: 60%;
+    border-radius: 100%;
+    display: inline-block;
+}
+
+.token.token-black {
+    background-color: black;
+}
+
+.token.token-white {
+    background-color: white;
 }
