@@ -1,12 +1,23 @@
 .square {
     width: 60px;
     height: 60px;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.square:nth-of-type(odd) {
+
+.row:nth-of-type(odd) .square:nth-of-type(odd) {
     background-color: #FFCE9E;
 }
 
-.square:nth-of-type(even) {
+.row:nth-of-type(odd) .square:nth-of-type(even) {
     background-color: #D18B47;
+}
+
+.row:nth-of-type(even) .square:nth-of-type(odd) {
+    background-color: #D18B47;
+}
+
+.row:nth-of-type(even) .square:nth-of-type(even) {
+    background-color: #FFCE9E;
 }

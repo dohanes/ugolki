@@ -6,10 +6,20 @@ import Game from'./game.js';
 class Square extends React.Component {
     render() {
         return (
-            <button className="square">
+            <div className="square">
                 {/* TODO */}
-            </button>
+            </div>
         );
+    }
+}
+
+class Row extends React.Component {
+    render() {
+        return (
+            <div className="row">
+                <Square /><Square /><Square /><Square /><Square /><Square /><Square /><Square />
+            </div>
+        )
     }
 }
 
@@ -19,7 +29,7 @@ class Board extends React.Component {
     }
 
     render() {
-        return (<> <Square /><Square /><Square /><Square /><Square /><Square /><Square /><Square /> <br /> <Square /><Square /><Square /><Square /><Square /><Square /><Square /><Square /> </>);
+        return (<> <Row /><Row /><Row /><Row /><Row /><Row /><Row /><Row /> </>);
     }
 }
 
