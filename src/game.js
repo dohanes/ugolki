@@ -29,30 +29,14 @@ class Square extends React.Component {
         this.tokenType = props.type;
     }
 
+    handleClick() {
+        alert("Yep")
+    }
+
 
     render() {
         const desc = this.tokenType !== '0' ? <Token type={this.tokenType} /> : ''
-        return <div className="square">{desc}</div>;
-    }
-}
-
-class Row extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.tiles = props.tiles[0].split('');
-    }
-
-    render() {
-        return (<>
-            <div className="row">
-                {
-                    this.tiles.map(t => {
-                        return <Square type={t} />
-                    })
-                }
-            </div>
-        </>)
+        return <div className="square" onClick={() => this.handleClick()}>{desc}</div>;
     }
 }
 
@@ -67,10 +51,23 @@ class Board extends React.Component {
         }
     }
 
+    renderSquares(t) {
+        let tiles = t[0].split('');
+        return (<>
+            <div className="row">
+                {
+                    tiles.map(t => {
+                        return <Square type={t} />
+                    })
+                }
+            </div>
+        </>)
+    }
+
     render() {
         return (<> {
             this.tiles.map(t => {
-                return <Row tiles={t} />
+                return this.renderSquares(t)
             })
         } </>);
     }
