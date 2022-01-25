@@ -5,8 +5,11 @@
     vertical-align: middle;
     text-align: center;
     display: table-cell;
-}
 
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
 
 .row:nth-of-type(odd) .square:nth-of-type(odd) {
     background-color: #FFCE9E;
@@ -22,6 +25,10 @@
 
 .row:nth-of-type(even) .square:nth-of-type(even) {
     background-color: #FFCE9E;
+}
+
+.square.selected {
+    border: 3px solid yellow;
 }
 
 .token {

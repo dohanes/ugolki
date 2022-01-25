@@ -25,18 +25,18 @@ class Token extends React.Component {
 class Square extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state = {selected: false}
         this.tokenType = props.type;
     }
 
     handleClick() {
-        alert("Yep")
+        this.setState({selected: true})
     }
 
 
     render() {
         const desc = this.tokenType !== '0' ? <Token type={this.tokenType} /> : ''
-        return <div className="square" onClick={() => this.handleClick()}>{desc}</div>;
+        return <div className={"square" + (this.state.selected ? ' selected' : '')} onClick={() => this.handleClick()}>{desc}</div>;
     }
 }
 
@@ -76,9 +76,10 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props, state, turn) {
         super(props)
+        
         let s = {};
-        if (!state || typeof state !== 'string' || state.length !== 64) {
-            s.tiles = "1110000011100000111000001110000000000222000002220000022200000222"
+        if (!Game.validateState(state)) {
+            s.tiles = Game.generateState()
         } else {
             s.tiles = state
         }
@@ -100,6 +101,45 @@ class Game extends React.Component {
 
     static convertPos(x, y) {
         return (x - 1) + ((y - 1) * 8);
+    }
+
+    static validateState(state) {
+        if (!state || typeof state !== 'string' || state.length !== 64) {
+            return false;
+        }
+
+        var whiteTokens = (state.match(/1/g) || []).length;
+        var blackTokens = (state.match(/2/g) || []).length;
+
+        if (whiteTokens !== blackTokens || (whiteTokens !== 9 && whiteTokens !== 12 && whiteTokens !== 16)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    static generateState(homeWidth, homeHeight) {
+        var state = "";
+        if ((homeWidth !== 3 && homeWidth !== 4) || (homeHeight !== 3 && homeHeight !== 4)) {
+            homeWidth = 3;
+            homeHeight = 4;
+        }
+
+        for (var i = 0; i < 8; i++) {
+            if (i < homeHeight) {
+                state += '1'.repeat(homeWidth) + '0'.repeat(8 - homeWidth)
+            } else if ((i === 3 || i == 4) && homeHeight === 3) {
+                state += '0'.repeat(8)
+            } else {
+                state += '0'.repeat(8 - homeWidth) + '2'.repeat(homeWidth)
+            }
+        }
+        
+        return state;
+    }
+
+    stateInBase32() {
+        return parseInt(this.state.tiles, 3).toString(32)
     }
 
     validateWin() {
