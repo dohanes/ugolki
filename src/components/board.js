@@ -12,23 +12,27 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
-        if (this.state.selected === i) {
-            this.setState({ selected: null })
+        if (this.possibilities.includes(i)) {
+            this.props.move(this.state.selected, i)
             this.possibilities = [];
-        } else if (this.state.selected === null) {
+            this.setState({selected: null})
+        } else if (this.props.tiles[i] === this.props.turn && this.state.selected !== i) {
             this.setState({ selected: i })
             this.possibilities = this.props.possible_moves(i)
+        } else {
+            this.setState({ selected: null })
+            this.possibilities = [];
         }
     }
 
     renderSquares(tileRow, index) {
         let tiles = tileRow[0].split('');
         return (<>
-            <div className="row">
+            <div className="row" key={index}>
                 {
                     tiles.map((t, i) => {
                         let squareIndex = (i + (index * 8));
-                        return <Square type={t} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} is_possibility={this.possibilities.includes(squareIndex)} />
+                        return <Square type={t} key={squareIndex} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} is_possibility={this.possibilities.includes(squareIndex)} />
                     })
                 }
             </div>

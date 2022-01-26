@@ -32,7 +32,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} />;
+        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} move={(pos1, pos2) => this.move(this.state.turn, pos1, pos2)} />;
     }
 
     static convertPos(x, y) {
@@ -109,15 +109,18 @@ class Game extends React.Component {
     }
 
     validateWin() {
+        //var tokens = (state.match(/1/g) || []).length;
+        //var winScenario = player => this.state.tiles.startsWith(player.repeat(3) + '00000')
+
         if (this.state.tiles.startsWith('222000002220000022200000222')) {
-            this.winner = 2;
+            this.setState({winner: 2})
         } else if (this.state.tiles.endsWith('111000001110000011100000111')) {
-            this.winner = 1;
+            this.setState({ winner: 1 })
         } else {
-            this.winner = 0;
+            this.setState({ winner: 0 })
         }
 
-        return this.winner;
+        return this.state.winner;
     }
 
     print() {
@@ -191,7 +194,21 @@ class Game extends React.Component {
             }
         }
 
-        return [...hoppable, ...this.#possible_hops(position).filter(x => x !== null)]
+        var visited = [];
+        var unvisited = [position];
+
+        while (unvisited.length) {
+            var newVisited = [];
+            for (const pos of unvisited) {
+                newVisited.push(...this.#possible_hops(pos).filter(x => x !== null && !visited.includes(x)))
+            }
+
+            visited.push(...unvisited)
+
+            unvisited = newVisited;
+        }
+
+        return [...hoppable, ...this.#possible_hops(position).filter(x => x !== null), ...visited.filter(x => x !== position && x !== null)]
     }
 
     move(player, from, to) {
@@ -201,9 +218,9 @@ class Game extends React.Component {
 
         if (Math.abs(from - to) === 1 || Math.abs(from - to) === 8) {
             let tiles = this.state.tiles.slice();
-            tiles = replaceAt(this.state.tiles, from, '0');
-            tiles = replaceAt(this.state.tiles, to, this.state.turn.toString());
-            this.setState({ tiles: tiles, turn: this.state.turn === 1 ? 2 : 1 })
+            tiles = replaceAt(tiles, from, '0');
+            tiles = replaceAt(tiles, to, this.state.turn.toString());
+            this.setState({ tiles: tiles, turn: this.state.turn === '1' ? '2' : '1' })
             return { success: true, hops: 0, win: this.validateWin() }
         }
 
@@ -224,9 +241,9 @@ class Game extends React.Component {
 
             if (visited.includes(to)) {
                 let tiles = this.state.tiles.slice();
-                tiles = replaceAt(this.state.tiles, from, '0');
-                tiles = replaceAt(this.state.tiles, to, this.state.turn.toString());
-                this.setState({ tiles: tiles, turn: this.state.turn === 1 ? 2 : 1 })
+                tiles = replaceAt(tiles, from, '0');
+                tiles = replaceAt(tiles, to, this.state.turn.toString());
+                this.setState({ tiles: tiles, turn: this.state.turn === '1' ? '2' : '1' })
                 return { success: true, hops: hops, win: this.validateWin() }
             }
 

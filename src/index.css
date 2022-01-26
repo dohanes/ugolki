@@ -32,18 +32,20 @@
 }
 
 .token {
-    width: 60%;
-    height: 60%;
+    width: 50%;
+    height: 50%;
     border-radius: 100%;
     display: inline-block;
 }
 
 .token.token-black {
     background-color: black;
+    border: 5px solid #585858bd;
 }
 
 .token.token-white {
     background-color: white;
+    border: 5px solid #dfdfdfbd;
 }
 
 .possibility {
