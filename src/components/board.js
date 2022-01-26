@@ -8,7 +8,8 @@ class Board extends React.Component {
             <div className="row">
                 {
                     tiles.map((t, i) => {
-                        return <Square type={t} index={(i + (index * 8))} />
+                        let squareIndex = (i + (index * 8));
+                        return <Square type={t} index={squareIndex} onClick={() => this.props.onClick(squareIndex)} />
                     })
                 }
             </div>

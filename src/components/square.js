@@ -1,15 +1,19 @@
 import React from 'react';
-import Token from './token.js';
 
 class Square extends React.Component {
     handleClick() {
         this.setState({ selected: true })
     }
 
+    renderToken() {
+        if (this.props.type === '0') return '';
+
+        return <div className={"token " + (this.props.type === '1' ? 'token-white' : 'token-black')}></div>;
+    }
+
 
     render() {
-        const desc = this.props.type !== '0' ? <Token type={this.props.type} /> : ''
-        return <div className={"square" + (this.props.selected ? ' selected' : '')} onClick={() => this.handleClick()}>{desc}</div>;
+        return <div className={"square" + (this.props.selected ? ' selected' : '')} onClick={this.props.onClick}>{this.renderToken()}</div>;
     }
 }
 
