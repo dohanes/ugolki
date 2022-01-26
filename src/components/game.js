@@ -1,4 +1,5 @@
 import React from 'react';
+import Board from './board.js';
 
 const replaceAt = function (str, index, replacement) {
     return str.substring(0, index) + replacement + str.substring(index + replacement.length);
@@ -8,75 +9,10 @@ const Player = { WHITE: '1', BLACK: '2' }
 
 const numbers = ['１', '２', '３', '４', '５', '６', '７', '８'];
 
-class Token extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.type = props.type === '1' ? 'token-white' : 'token-black';
-    }
-
-    render() {
-        return (
-            <div className={"token " + this.type}></div>
-        )
-    }
-}
-
-class Square extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {selected: false}
-        this.tokenType = props.type;
-    }
-
-    handleClick() {
-        this.setState({selected: true})
-    }
-
-
-    render() {
-        const desc = this.tokenType !== '0' ? <Token type={this.tokenType} /> : ''
-        return <div className={"square" + (this.state.selected ? ' selected' : '')} onClick={() => this.handleClick()}>{desc}</div>;
-    }
-}
-
-class Board extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.tiles = [];
-
-        for (var i = 0; i < props.tiles.length; i += 8) {
-            this.tiles.push([props.tiles.substr(i, 8)])
-        }
-    }
-
-    renderSquares(t) {
-        let tiles = t[0].split('');
-        return (<>
-            <div className="row">
-                {
-                    tiles.map(t => {
-                        return <Square type={t} />
-                    })
-                }
-            </div>
-        </>)
-    }
-
-    render() {
-        return (<> {
-            this.tiles.map(t => {
-                return this.renderSquares(t)
-            })
-        } </>);
-    }
-}
-
 class Game extends React.Component {
     constructor(props, state, turn) {
         super(props)
-        
+
         let s = {};
         if (!Game.validateState(state)) {
             s.tiles = Game.generateState()
@@ -96,7 +32,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <Board tiles={this.state.tiles} />;
+        return <Board tiles={this.state.tiles} turn={this.state.turn} />;
     }
 
     static convertPos(x, y) {
@@ -128,13 +64,13 @@ class Game extends React.Component {
         for (var i = 0; i < 8; i++) {
             if (i < homeHeight) {
                 state += '1'.repeat(homeWidth) + '0'.repeat(8 - homeWidth)
-            } else if ((i === 3 || i == 4) && homeHeight === 3) {
+            } else if ((i === 3 || i === 4) && homeHeight === 3) {
                 state += '0'.repeat(8)
             } else {
                 state += '0'.repeat(8 - homeWidth) + '2'.repeat(homeWidth)
             }
         }
-        
+
         return state;
     }
 
@@ -205,7 +141,7 @@ class Game extends React.Component {
             let tiles = this.state.tiles.slice();
             tiles = replaceAt(this.state.tiles, from, '0');
             tiles = replaceAt(this.state.tiles, to, this.state.turn.toString());
-            this.setState({ tiles: tiles, turn: this.state.turn === 1 ? 2 : 1})
+            this.setState({ tiles: tiles, turn: this.state.turn === 1 ? 2 : 1 })
             return { success: true, hops: 0, win: this.validateWin() }
         }
 
@@ -228,7 +164,7 @@ class Game extends React.Component {
                 let tiles = this.state.tiles.slice();
                 tiles = replaceAt(this.state.tiles, from, '0');
                 tiles = replaceAt(this.state.tiles, to, this.state.turn.toString());
-                this.setState({tiles: tiles, turn: this.state.turn === 1 ? 2 : 1})
+                this.setState({ tiles: tiles, turn: this.state.turn === 1 ? 2 : 1 })
                 return { success: true, hops: hops, win: this.validateWin() }
             }
 
