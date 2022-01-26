@@ -48,7 +48,7 @@ class Board extends React.Component {
             tilesByRow.map((tileRow, index) => {
                 return this.renderSquares(tileRow, index)
             })
-        } </>);
+        } <p>State: {this.props.tiles}</p><p>Game ID: {this.props.toBase32()}</p> </>);
     }
 }
 

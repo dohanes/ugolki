@@ -1,38 +1,27 @@
 {
   "name": "ugolki",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "5.0.0",
-    "web-vitals": "^2.1.4"
-  },
+  "version": "1.0.0",
+  "description": "The public and open-source way to play Ugolki online.\r [Play it live on Ugolki.net!](https://www.ugolki.net/)",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node server/index.js",
+    "postinstall": "cd client && npm install",
+    "build": "cd client && npm install && npm run build",
+    "dev": "concurrently \"cd client && npm start\" \"node server/index.js\""
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dohanes/ugolki.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dohanes/ugolki/issues"
+  },
+  "homepage": "https://github.com/dohanes/ugolki#readme",
+  "dependencies": {
+    "concurrently": "^7.0.0",
+    "express": "^4.17.2"
   }
 }

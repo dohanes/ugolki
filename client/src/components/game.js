@@ -32,7 +32,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} move={(pos1, pos2) => this.move(this.state.turn, pos1, pos2)} />;
+        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} move={(pos1, pos2) => this.move(this.state.turn, pos1, pos2)} toBase32={() => this.stateInBase32()} />;
     }
 
     static convertPos(x, y) {
