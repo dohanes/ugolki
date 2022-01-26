@@ -31,12 +31,8 @@ class Game extends React.Component {
         this.validateWin();
     }
 
-    handleClick(i) {
-        
-    }
-
     render() {
-        return <Board tiles={this.state.tiles} turn={this.state.turn} onClick={(i) => this.handleClick(i)} />;
+        return <Board tiles={this.state.tiles} turn={this.state.turn} />;
     }
 
     static convertPos(x, y) {
