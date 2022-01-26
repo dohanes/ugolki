@@ -7,24 +7,28 @@ class Board extends React.Component {
         super(props)
 
         this.state = { selected: null }
+
+        this.possibilities = [];
     }
 
     handleClick(i) {
         if (this.state.selected === i) {
             this.setState({ selected: null })
+            this.possibilities = [];
         } else if (this.state.selected === null) {
             this.setState({ selected: i })
+            this.possibilities = this.props.possible_moves(i)
         }
     }
 
-    renderSquares(t, index) {
-        let tiles = t[0].split('');
+    renderSquares(tileRow, index) {
+        let tiles = tileRow[0].split('');
         return (<>
             <div className="row">
                 {
                     tiles.map((t, i) => {
                         let squareIndex = (i + (index * 8));
-                        return <Square type={t} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} />
+                        return <Square type={t} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} is_possibility={this.possibilities.includes(squareIndex)} />
                     })
                 }
             </div>
@@ -32,13 +36,13 @@ class Board extends React.Component {
     }
 
     render() {
-        let tiles = [];
+        let tilesByRow = [];
         for (var i = 0; i < this.props.tiles.length; i += 8) {
-            tiles.push([this.props.tiles.substr(i, 8)])
+            tilesByRow.push([this.props.tiles.substr(i, 8)])
         }
         return (<> {
-            tiles.map((t, index) => {
-                return this.renderSquares(t, index)
+            tilesByRow.map((tileRow, index) => {
+                return this.renderSquares(tileRow, index)
             })
         } </>);
     }

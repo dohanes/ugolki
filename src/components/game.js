@@ -32,11 +32,41 @@ class Game extends React.Component {
     }
 
     render() {
-        return <Board tiles={this.state.tiles} turn={this.state.turn} />;
+        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} />;
     }
 
     static convertPos(x, y) {
+        if (x < 1 || x > 8 || y < 1 || y > 8) return null;
         return (x - 1) + ((y - 1) * 8);
+    }
+
+    static convertCoords(pos) {
+        var x = (pos % 8) + 1;
+        var y = Math.floor(pos / 8) + 1;
+        return [x, y];
+    }
+
+    static goTo(direction, pos, times) {
+        var coords = Game.convertCoords(pos);
+
+        switch(direction.toLowerCase()[0]) {
+            case 'l':
+                coords[0] -= times;
+                break;
+            case 'r':
+                coords[0] += times;
+                break;
+            case 'u':
+                coords[1] -= times;
+                break;
+            case 'd':
+                coords[1] += times;
+                break;
+            default:
+                return null;
+        }
+
+        return Game.convertPos(...coords);
     }
 
     static validateState(state) {
@@ -116,8 +146,18 @@ class Game extends React.Component {
         return msg.split("\n").map((x, index) => (index ? numbers[index - 1] : "  ") + " " + x).join("\n");
     }
 
+
+
     #possible_hops(position) {
-        var directions = [[position - 8, position - 16], [position + 1, position + 2], [position + 8, position + 16], [position - 1, position - 2]]
+        var dirs = ['l', 'r', 'u', 'd'];
+
+        var directions = [];
+        dirs.forEach(dir => {
+            var positions = [Game.goTo(dir, position, 1), Game.goTo(dir, position, 2)]
+            if (!positions.includes(null)) {
+                directions.push(positions)
+            }
+        })
 
         var hoppable = [];
 
@@ -130,6 +170,28 @@ class Game extends React.Component {
         }
 
         return hoppable;
+    }
+
+    possible_moves(position) {
+        var dirs = ['l', 'r', 'u', 'd'];
+
+        var directions = [];
+        dirs.forEach(dir => {
+            var pos = Game.goTo(dir, position, 1)
+            if (pos !== null) {
+                directions.push(pos)
+            }
+        })
+
+        var hoppable = [];
+
+        for (const direction of directions) {
+            if (this.state.tiles[direction] === '0') {
+                hoppable.push(direction)
+            }
+        }
+
+        return [...hoppable, ...this.#possible_hops(position).filter(x => x !== null)]
     }
 
     move(player, from, to) {

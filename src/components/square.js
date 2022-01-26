@@ -6,9 +6,13 @@ class Square extends React.Component {
     }
 
     renderToken() {
-        if (this.props.type === '0') return '';
+        if (this.props.is_possibility) {
+            return <div className="possibility"></div>;
+        } else if (this.props.type !== '0') {
+            return <div className={"token " + (this.props.type === '1' ? 'token-white' : 'token-black')}></div>;
+        }
 
-        return <div className={"token " + (this.props.type === '1' ? 'token-white' : 'token-black')}></div>;
+        
     }
 
 
