@@ -28,7 +28,7 @@ class Board extends React.Component {
     renderSquares(tileRow, index) {
         let tiles = tileRow[0].split('');
         return (<>
-            <div className="row" key={index}>
+            <div className="board-row" key={index}>
                 {
                     tiles.map((t, i) => {
                         let squareIndex = (i + (index * 8));

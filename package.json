@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "postinstall": "cd client && npm install",
     "build": "cd client && npm install && npm run build",
-    "dev": "concurrently \"cd client && npm start\" \"node server/index.js\""
+    "dev": "concurrently \"cd client && npm start\" \"DEV=true node server/index.js\""
   },
   "repository": {
     "type": "git",

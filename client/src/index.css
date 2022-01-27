@@ -4,26 +4,26 @@
     display: inline-block;
     vertical-align: middle;
     text-align: center;
-    display: table-cell;
+    display: table-cell!important;
 
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+    box-sizing: border-box!important;
+    -moz-box-sizing: border-box!important;
+    -webkit-box-sizing: border-box!important;
 }
 
-.row:nth-of-type(odd) .square:nth-of-type(odd) {
+.board-row:nth-of-type(odd) .square:nth-of-type(odd) {
     background-color: #FFCE9E;
 }
 
-.row:nth-of-type(odd) .square:nth-of-type(even) {
+.board-row:nth-of-type(odd) .square:nth-of-type(even) {
     background-color: #D18B47;
 }
 
-.row:nth-of-type(even) .square:nth-of-type(odd) {
+.board-row:nth-of-type(even) .square:nth-of-type(odd) {
     background-color: #D18B47;
 }
 
-.row:nth-of-type(even) .square:nth-of-type(even) {
+.board-row:nth-of-type(even) .square:nth-of-type(even) {
     background-color: #FFCE9E;
 }
 
@@ -36,6 +36,7 @@
     height: 50%;
     border-radius: 100%;
     display: inline-block;
+    box-sizing: content-box;
 }
 
 .token.token-black {
