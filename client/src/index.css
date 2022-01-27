@@ -4,11 +4,11 @@
     display: inline-block;
     vertical-align: middle;
     text-align: center;
-    display: table-cell!important;
+    display: table-cell !important;
 
-    box-sizing: border-box!important;
-    -moz-box-sizing: border-box!important;
-    -webkit-box-sizing: border-box!important;
+    box-sizing: border-box !important;
+    -moz-box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
 }
 
 .board-row:nth-of-type(odd) .square:nth-of-type(odd) {
@@ -25,6 +25,12 @@
 
 .board-row:nth-of-type(even) .square:nth-of-type(even) {
     background-color: #FFCE9E;
+}
+
+.board {
+    display: inline-block !important;
+    margin: 0 auto !important;
+    padding: 3px !important;
 }
 
 .square.selected {

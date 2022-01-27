@@ -32,7 +32,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} move={(pos1, pos2) => this.move(this.state.turn, pos1, pos2)} toBase32={() => this.stateInBase32()} />;
+        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.possible_moves(pos)} move={(pos1, pos2) => this.move(this.state.turn, pos1, pos2)} toBase32={() => this.stateInBase32()} winner={this.state.winner} />;
     }
 
     static convertPos(x, y) {
@@ -86,7 +86,7 @@ class Game extends React.Component {
 
     static generateState(homeWidth, homeHeight) {
         var state = "";
-        if ((homeWidth !== 3 && homeWidth !== 4) || (homeHeight !== 3 && homeHeight !== 4)) {
+        if ((homeWidth !== 3 && homeWidth !== 4) || (homeHeight !== 3 && homeHeight !== 4) || (homeHeight === 3 && homeWidth === 4)) {
             homeWidth = 3;
             homeHeight = 4;
         }
@@ -109,12 +109,25 @@ class Game extends React.Component {
     }
 
     validateWin() {
-        //var tokens = (state.match(/1/g) || []).length;
-        //var winScenario = player => this.state.tiles.startsWith(player.repeat(3) + '00000')
+        var tokens = (this.state.tiles.match(/1/g) || []).length;
 
-        if (this.state.tiles.startsWith('222000002220000022200000222')) {
+        var check;
+
+        switch (tokens) {
+            case 9:
+                check = player => (player.repeat(3) + '00000').repeat(2) + player.repeat(3)
+                break;
+            case 16:
+                check = player => (player.repeat(4) + '0000').repeat(3) + player.repeat(4)
+                break;
+            default:
+                check = player => (player.repeat(3) + '00000').repeat(3) + player.repeat(3)
+                break;
+        }
+
+        if (this.state.tiles.startsWith(check('2'))) {
             this.setState({winner: 2})
-        } else if (this.state.tiles.endsWith('111000001110000011100000111')) {
+        } else if (this.state.tiles.endsWith(check('1'))) {
             this.setState({ winner: 1 })
         } else {
             this.setState({ winner: 0 })

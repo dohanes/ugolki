@@ -44,11 +44,11 @@ class Board extends React.Component {
         for (var i = 0; i < this.props.tiles.length; i += 8) {
             tilesByRow.push([this.props.tiles.substr(i, 8)])
         }
-        return (<> {
+        return (<div className="board"> {
             tilesByRow.map((tileRow, index) => {
                 return this.renderSquares(tileRow, index)
             })
-        } <p>State: {this.props.tiles}</p><p>Game ID: {this.props.toBase32()}</p> </>);
+        } <p>State: {this.props.tiles}</p><p>Game ID: {this.props.toBase32()}</p> </div>);
     }
 }
 

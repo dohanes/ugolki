@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Nav, NavDropdown, Navbar} from 'react-bootstrap';
+import {Container, Nav, Navbar} from 'react-bootstrap';
 
 class Menu extends React.Component {
     render() {
@@ -14,7 +14,7 @@ class Menu extends React.Component {
                             height="30"
                             className="d-inline-block align-top"
                         />{' '}
-                        Ugolki
+                        Ugolki.net
                     </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
