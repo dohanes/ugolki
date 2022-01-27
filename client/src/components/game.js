@@ -26,9 +26,9 @@ class Game extends React.Component {
             s.turn = Player[turn]
         }
 
-        this.state = s;
+        s.winner = this.validateWin(false, s.tiles);
 
-        this.validateWin();
+        this.state = s;
     }
 
     render() {
@@ -108,8 +108,9 @@ class Game extends React.Component {
         return parseInt(this.state.tiles, 3).toString(32)
     }
 
-    validateWin() {
-        var tokens = (this.state.tiles.match(/1/g) || []).length;
+    validateWin(edit, state) {
+        var tiles = state || this.state.tiles;
+        var tokens = (tiles.match(/1/g) || []).length;
 
         var check;
 
@@ -125,15 +126,19 @@ class Game extends React.Component {
                 break;
         }
 
-        if (this.state.tiles.startsWith(check('2'))) {
-            this.setState({winner: 2})
-        } else if (this.state.tiles.endsWith(check('1'))) {
-            this.setState({ winner: 1 })
+        var winner;
+
+        if (tiles.startsWith(check('2'))) {
+            winner = '2';
+        } else if (tiles.endsWith(check('1'))) {
+            winner = '1';
         } else {
-            this.setState({ winner: 0 })
+            winner = '0';
         }
 
-        return this.state.winner;
+        if (edit !== false) {
+            this.setState({winner: winner})
+        }
     }
 
     print() {
