@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { verifySignUp } from 'ugolki-lib'
+import { validateSignIn, validateSignUp } from 'ugolki-lib'
 
 function Modals() {
     const [signInIdentifier, setSignInIdentifier] = useState('');
@@ -8,69 +8,82 @@ function Modals() {
     const [signUpEmail, setSignUpEmail] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
 
+    const [signInError, setSignInError] = useState('');
+    const [signUpError, setSignUpError] = useState('');
+
     const signUp = () => {
-        const verify = verifySignUp(signUpUsername, signUpPassword);
+        const verify = validateSignUp(signUpUsername, signUpEmail, signUpPassword);
 
         if (verify.ok) {
+            setSignUpError('')
             alert("Signing you up")
         } else {
-            alert(verify.reason);
+            setSignUpError(verify.reason)
         }
     }
 
     const signIn = () => {
-        alert("Yea")
+        const verify = validateSignIn(signInIdentifier, signInPassword);
+
+        if (verify.ok) {
+            setSignInError('')
+            alert("Signing you in")
+        } else {
+            setSignInError(verify.reason)
+        }
     }
 
     return (
         <>
-        <div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Sign In</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="signInModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Sign In</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <input type="email" class="form-control" id="sign-in-id" placeholder="Username or Email" value="" onInput={e => setSignInIdentifier(e.target.value)} />
+                    <div className="modal-body">
+                        <div className="mb-3">
+                            <input type="email" className="form-control" id="sign-in-id" placeholder="Username or Email" value={signInIdentifier} onInput={e => setSignInIdentifier(e.target.value)} />
                         </div>
-                        <div class="mb-3">
-                                <input type="password" class="form-control" id="sign-in-password" placeholder="Password" value="" onInput={e => setSignInPassword(e.target.value)} />
+                        <div className="mb-3">
+                                <input type="password" className="form-control" id="sign-in-password" placeholder="Password" value={signInPassword} onInput={e => setSignInPassword(e.target.value)} />
                         </div>
+                        <div className="signin-error text-danger">{signInError}</div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={signIn}>Sign In</button>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-primary" onClick={signIn}>Sign In</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Sign Up</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="signUpModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Sign Up</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Username</label>
-                                <input type="email" class="form-control" id="sign-up-username" placeholder="Username" value="" onInput={e => setSignUpUsername(e.target.value)} />
+                    <div className="modal-body">
+                        <div className="mb-3">
+                            <label className="form-label">Username</label>
+                                <input type="email" className="form-control" id="sign-up-username" placeholder="Username" value={signUpUsername} onInput={e => setSignUpUsername(e.target.value)} />
                         </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Email (Optional)</label>
-                                <input type="email" class="form-control" id="sign-up-email" placeholder="name@example.com" value="" onInput={e => setSignUpEmail(e.target.value)} />
+                        <div className="mb-3">
+                            <label className="form-label">Email (Optional)</label>
+                                <input type="email" className="form-control" id="sign-up-email" placeholder="name@example.com" value={signUpEmail} onInput={e => setSignUpEmail(e.target.value)} />
                         </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="sign-up-password" placeholder="••••••••" value="" onInput={e => setSignUpPassword(e.target.value)} />
+                        <div className="mb-3">
+                            <label className="form-label">Password</label>
+                                <input type="password" className="form-control" id="sign-up-password" placeholder="••••••••" value={signUpPassword} onInput={e => setSignUpPassword(e.target.value)} />
                         </div>
+                        <div className="signup-error text-danger">{signUpError}</div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={signUp}>Sign Up</button>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-primary" onClick={signUp}>Sign Up</button>
                     </div>
                 </div>
             </div>
