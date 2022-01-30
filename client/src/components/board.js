@@ -12,7 +12,7 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
-        if (this.props.winner !== '0') {
+        if (this.props.winner === '0') {
             if (this.possibilities.includes(i)) {
                 this.props.move(this.state.selected, i)
                 this.possibilities = [];
@@ -50,7 +50,7 @@ class Board extends React.Component {
             tilesByRow.map((tileRow, index) => {
                 return this.renderSquares(tileRow, index)
             })
-        } <p>State: {this.props.tiles}</p><p>Game ID: {this.props.toBase32()}</p> </div>);
+        } <p>State: {this.props.tiles}</p><p>Game ID: {this.props.toBase32()}</p> <p>Current Turn: {this.props.turn === '1' ? 'White' : 'Black'}</p> <p>Winner: {this.props.winner === '0' ? 'None' : this.props.winner === '1' ? 'White' : 'Black'}</p> </div>);
     }
 }
 

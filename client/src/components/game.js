@@ -93,11 +93,11 @@ class Game extends React.Component {
 
         for (var i = 0; i < 8; i++) {
             if (i < homeHeight) {
-                state += '1'.repeat(homeWidth) + '0'.repeat(8 - homeWidth)
+                state += '2'.repeat(homeWidth) + '0'.repeat(8 - homeWidth)
             } else if ((i === 3 || i === 4) && homeHeight === 3) {
                 state += '0'.repeat(8)
             } else {
-                state += '0'.repeat(8 - homeWidth) + '2'.repeat(homeWidth)
+                state += '0'.repeat(8 - homeWidth) + '1'.repeat(homeWidth)
             }
         }
 
@@ -128,9 +128,9 @@ class Game extends React.Component {
 
         var winner;
 
-        if (tiles.startsWith(check('2'))) {
+        if (tiles.endsWith(check('2'))) {
             winner = '2';
-        } else if (tiles.endsWith(check('1'))) {
+        } else if (tiles.startsWith(check('1'))) {
             winner = '1';
         } else {
             winner = '0';
@@ -139,6 +139,8 @@ class Game extends React.Component {
         if (edit !== false) {
             this.setState({winner: winner})
         }
+
+        return winner;
     }
 
     print() {
@@ -239,7 +241,7 @@ class Game extends React.Component {
             tiles = replaceAt(tiles, from, '0');
             tiles = replaceAt(tiles, to, this.state.turn.toString());
             this.setState({ tiles: tiles, turn: this.state.turn === '1' ? '2' : '1' })
-            return { success: true, hops: 0, win: this.validateWin() }
+            return { success: true, hops: 0, win: this.validateWin(true, tiles) }
         }
 
         var visited = [];
@@ -262,7 +264,7 @@ class Game extends React.Component {
                 tiles = replaceAt(tiles, from, '0');
                 tiles = replaceAt(tiles, to, this.state.turn.toString());
                 this.setState({ tiles: tiles, turn: this.state.turn === '1' ? '2' : '1' })
-                return { success: true, hops: hops, win: this.validateWin() }
+                return { success: true, hops: hops, win: this.validateWin(true, tiles) }
             }
 
             hops++;

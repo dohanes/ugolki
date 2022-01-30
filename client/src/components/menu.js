@@ -24,7 +24,8 @@ class Menu extends React.Component {
                         
                     </Nav>
                     <Nav>
-                        <Nav.Link href="#features">Sign In</Nav.Link>
+                        <Nav.Link href="#" data-bs-toggle="modal" data-bs-target="#signInModal">Sign In</Nav.Link>
+                        <Nav.Link href="#" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign Up</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

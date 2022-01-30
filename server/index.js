@@ -1,6 +1,6 @@
 const express = require("express");
 
-const PORT = process.env.DEV === 'true' ? 3001 : 3000;
+const PORT = 5000;
 
 const app = express();
 
