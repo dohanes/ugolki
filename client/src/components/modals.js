@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Verifier } from '../../../verifier.js'
+import { verifySignUp } from 'ugolki-lib'
 
 function Modals() {
     const [signInIdentifier, setSignInIdentifier] = useState('');
@@ -9,10 +9,12 @@ function Modals() {
     const [signUpPassword, setSignUpPassword] = useState('');
 
     const signUp = () => {
-        if (signUpUsername.length < 3) {
+        const verify = verifySignUp(signUpUsername, signUpPassword);
 
-        } else if (signUpUsername.test(/^[a-z0-9]+$/i)) {
-
+        if (verify.ok) {
+            alert("Signing you up")
+        } else {
+            alert(verify.reason);
         }
     }
 
