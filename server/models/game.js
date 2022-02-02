@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 
 export default sequelize => {
-    const Game = sequelize.define('Game', {
+    sequelize.define('Game', {
         id: {
             type: DataTypes.BIGINT,
             allowNull: false,
