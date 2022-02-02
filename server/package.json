@@ -6,10 +6,21 @@
   "scripts": {
     "start": "node index.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^7.0.0",
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "randomstring": "^1.2.2",
+    "sequelize": "^6.15.0"
   }
 }
