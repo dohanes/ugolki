@@ -10,16 +10,44 @@ export default class User extends Model {
                 autoIncrement: true
             },
             username: {
-                type: DataTypes.STRING(32),
-                allowNull: false
+                type: DataTypes.STRING(16),
+                allowNull: false,
+                unique: 'usernameIndex',
+                validate: {
+                    isAlphanumeric: {
+                        args: true,
+                        msg: "Your username must be alphanumeric!"
+                    },
+                    notEmpty: {
+                        args: true,
+                        msg: "Your username cannot be empty!"
+                    },
+                    len: {
+                        args: [3, 16],
+                        msg: "Your username must be between 3 to 16 characters!"
+                    }
+                }
             },
             password: {
                 type: DataTypes.STRING(48),
-                allowNull: false
+                allowNull: false,
+                validate: {
+                    len: {
+                        args: [8, 48],
+                        msg: "Your password must be between 8-48 characters long!"
+                    }
+                }
             },
             email: {
                 type: DataTypes.TEXT,
-                allowNull: true
+                allowNull: true,
+                unique: 'emailIndex',
+                validate: {
+                    isEmail: {
+                        args: true,
+                        msg: "Please enter a valid email!"
+                    }
+                }
             }
         }, { sequelize, modelName: 'User' } )
     }

@@ -16,11 +16,6 @@ for (const fileName of fs.readdirSync('../db/models')) {
     }
 }
 
-const { User, Game } = sequelize.models;
-
-User.hasMany(Game);
-Game.belongsTo(User);
-
 sequelize.sync();
 
 export default sequelize;

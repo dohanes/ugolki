@@ -14,14 +14,13 @@ passport.serializeUser((user, done) => {
 })
 
 
-
 passport.deserializeUser((id, done) => {
-    db.query('SELECT * FROM users WHERE id = $1', [id], (err, user) => {
-        if (err || user.rows.length < 1) {
-            done(null, null)
-        } else {
-            done(null, user.rows[0])
+    User.findOne({
+        where: {
+            id: id
         }
+    }).then(user => {
+        done(null, user?.id || null)
     })
 })
 
