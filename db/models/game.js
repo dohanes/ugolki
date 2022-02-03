@@ -12,14 +12,18 @@ export default class Game extends Model {
             white: {
                 type: DataTypes.BIGINT,
                 allowNull: false,
-                references: 'users',
-                referencesKey: 'id'
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             },
             black: {
                 type: DataTypes.BIGINT,
                 allowNull: false,
-                references: 'users',
-                referencesKey: 'id'
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             },
             state: {
                 type: DataTypes.TEXT,
@@ -33,6 +37,6 @@ export default class Game extends Model {
                 type: DataTypes.DATE,
                 allowNull: true,
             }
-        }, { sequelize })
+        }, { sequelize, modelName: 'Game' })
     }
 }

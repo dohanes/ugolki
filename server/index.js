@@ -9,7 +9,7 @@ if (process.env.OFFLINE === 'true') {
 //Import libraries
 import express from "express";
 import randomString from 'randomstring';
-import sequelize from './sequelize/index.js'
+import sequelize from 'db';
 import session from 'express-session';
 import passport from './passport/setup.js';
 import pgSession from 'connect-session-sequelize';
@@ -32,8 +32,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-sequelize.sync();
 
 app.listen(5000, () => {
     console.log(`Server listening on port 5000`);

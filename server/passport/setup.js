@@ -5,9 +5,15 @@ import passport from 'passport';
 
 import { Strategy as LocalStrategy } from 'passport-local';
 
+import db from 'db';
+
+const { User } = db.models;
+
 passport.serializeUser((user, done) => {
     done(null, user.id);
 })
+
+
 
 passport.deserializeUser((id, done) => {
     db.query('SELECT * FROM users WHERE id = $1', [id], (err, user) => {

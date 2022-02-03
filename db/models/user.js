@@ -17,14 +17,10 @@ export default class User extends Model {
                 type: DataTypes.STRING(48),
                 allowNull: false
             },
-            created: {
-                type: DataTypes.DATE,
-                allowNull: false
-            },
             email: {
                 type: DataTypes.TEXT,
                 allowNull: true
             }
-        }, { sequelize } )
+        }, { sequelize, modelName: 'User' } )
     }
 }
