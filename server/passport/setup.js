@@ -5,10 +5,6 @@ import passport from 'passport';
 
 import { Strategy as LocalStrategy } from 'passport-local';
 
-db.query("SELECT 1;").then(rows => {
-    console.log(rows)
-})
-
 passport.serializeUser((user, done) => {
     done(null, user.id);
 })

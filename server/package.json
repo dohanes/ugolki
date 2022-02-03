@@ -13,6 +13,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-pg-simple": "^7.0.0",
+    "connect-session-sequelize": "^7.1.2",
     "dotenv": "^14.3.2",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
