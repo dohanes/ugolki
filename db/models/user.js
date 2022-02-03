@@ -29,25 +29,8 @@ export default class User extends Model {
                 }
             },
             password: {
-                type: DataTypes.STRING(48),
-                allowNull: false,
-                validate: {
-                    len: {
-                        args: [8, 48],
-                        msg: "Your password must be between 8-48 characters long!"
-                    }
-                }
-            },
-            email: {
                 type: DataTypes.TEXT,
-                allowNull: true,
-                unique: 'emailIndex',
-                validate: {
-                    isEmail: {
-                        args: true,
-                        msg: "Please enter a valid email!"
-                    }
-                }
+                allowNull: false
             }
         }, { sequelize, modelName: 'User' } )
     }

@@ -5,14 +5,13 @@ function Modals() {
     const [signInIdentifier, setSignInIdentifier] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
     const [signUpUsername, setSignUpUsername] = useState('');
-    const [signUpEmail, setSignUpEmail] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
 
     const [signInError, setSignInError] = useState('');
     const [signUpError, setSignUpError] = useState('');
 
     const signUp = () => {
-        const verify = validateSignUp(signUpUsername, signUpEmail, signUpPassword);
+        const verify = validateSignUp(signUpUsername, signUpPassword);
 
         if (verify.ok) {
             setSignUpError('')
@@ -70,10 +69,6 @@ function Modals() {
                         <div className="mb-3">
                             <label className="form-label">Username</label>
                                 <input type="email" className="form-control" id="sign-up-username" placeholder="Username" value={signUpUsername} onInput={e => setSignUpUsername(e.target.value)} />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Email (Optional)</label>
-                                <input type="email" className="form-control" id="sign-up-email" placeholder="name@example.com" value={signUpEmail} onInput={e => setSignUpEmail(e.target.value)} />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Password</label>
