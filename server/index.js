@@ -13,6 +13,7 @@ import sequelize from 'db';
 import session from 'express-session';
 import passport from './passport/setup.js';
 import pgSession from 'connect-session-sequelize';
+import fs from 'fs';
 
 
 const app = express();
@@ -37,6 +38,11 @@ app.listen(5000, () => {
     console.log(`Server listening on port 5000`);
 });
 
-app.get('/api/sign-in', (req, res, next) => {
-    
+for (const fileName of fs.readdirSync('../server/routes')) {
+    let route = (await import('./routes/' + fileName)).default;
+    app.use('/api/' + fileName.replace('.js', ''), route)
+}
+
+app.use("*", (req, res, next) => {
+    return res.sendStatus(404);
 })
