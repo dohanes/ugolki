@@ -11,15 +11,22 @@ import express from "express";
 import randomString from 'randomstring';
 import sequelize from 'db';
 import session from 'express-session';
-import passport from './passport/setup.js';
+import passport from '../server/passport/setup.js';
 import pgSession from 'connect-session-sequelize';
 import fs from 'fs';
+import path from 'path';
+import bodyParser from 'body-parser';
 
 
 const app = express();
 
 
 const SequelizeStore = pgSession(session.Store);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+})); 
 
 app.use(session({
     store: new SequelizeStore({
@@ -34,15 +41,20 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.listen(5000, () => {
-    console.log(`Server listening on port 5000`);
+app.listen(3000, () => {
+    console.log(`Server listening on port 3000`);
 });
 
-for (const fileName of fs.readdirSync('../server/routes')) {
+for (const fileName of fs.readdirSync('./server/routes')) {
     let route = (await import('./routes/' + fileName)).default;
     app.use('/api/' + fileName.replace('.js', ''), route)
 }
 
-app.use("*", (req, res, next) => {
+app.get('*', (req, res) => {
+    let url = req.originalUrl.substring(1);
+    res.sendFile(path.resolve('./client/build', !url ? 'index.html' : url));
+});
+
+/*app.use("*", (req, res, next) => {
     return res.sendStatus(404);
-})
+})*/

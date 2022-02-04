@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
-    "postinstall": "(cd client && npm install) && (cd lib && npm install) && (cd server && npm install) && (cd db && npm install)",
-    "build": "cd client && npm install && npm run build",
-    "dev": "concurrently \"cd client && npm start\" \"node server/index.js\""
+    "postinstall": "(cd client && npm install) && (cd lib && npm install) && (cd db && npm install) && (cd server && npm install && npm link ugolki-lib db)",
+    "build": "cd client && npm install && npm link ugolki-lib && npm run build",
+    "dev": "cd client && npm start"
   },
   "repository": {
     "type": "git",

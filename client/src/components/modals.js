@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { validateSignIn, validateSignUp } from 'ugolki-lib'
 
 function Modals() {
-    const [signInIdentifier, setSignInIdentifier] = useState('');
+    const [signInUsername, setSignInUsername] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
     const [signUpUsername, setSignUpUsername] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
@@ -15,18 +15,66 @@ function Modals() {
 
         if (verify.ok) {
             setSignUpError('')
-            alert("Signing you up")
+            let status;
+            fetch("/api/account/sign-up", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({username: signUpUsername, password: signUpPassword})
+            })
+            .then((res) => {
+                status = res.status;
+                return res.json()
+            })
+            .then((data) => {
+                if (status === 400) {
+                    setSignUpError(data.error)
+                } else if (status === 200) {
+                    window.location.reload(false);
+                } else {
+                    setSignUpError("An unknown error occurred. Please try again later.")
+                }
+            }).catch(e => {
+                setSignUpError("An unknown error occurred. Please try again later.")
+            })
         } else {
             setSignUpError(verify.reason)
         }
     }
 
     const signIn = () => {
-        const verify = validateSignIn(signInIdentifier, signInPassword);
+        const verify = validateSignIn(signInUsername, signInPassword);
 
         if (verify.ok) {
             setSignInError('')
-            alert("Signing you in")
+
+            let status;
+            fetch("/api/account/sign-in", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: signInUsername, password: signInPassword })
+            })
+            .then((res) => {
+                status = res.status;
+                return res.json()
+            })
+            .then((data) => {
+                if (status === 400) {
+                    setSignInError(data.error)
+                } else if (status === 200) {
+                    window.location.reload(false);
+                } else {
+                    setSignInError("An unknown error occurred. Please try again later.")
+                }
+            }).catch(e => {
+                setSignInError("An unknown error occurred. Please try again later.")
+            })
+
         } else {
             setSignInError(verify.reason)
         }
@@ -43,7 +91,7 @@ function Modals() {
                     </div>
                     <div className="modal-body">
                         <div className="mb-3">
-                            <input type="email" className="form-control" id="sign-in-id" placeholder="Username or Email" value={signInIdentifier} onInput={e => setSignInIdentifier(e.target.value)} />
+                            <input type="email" className="form-control" id="sign-in-id" placeholder="Username or Email" value={signInUsername} onInput={e => setSignInUsername(e.target.value)} />
                         </div>
                         <div className="mb-3">
                                 <input type="password" className="form-control" id="sign-in-password" placeholder="Password" value={signInPassword} onInput={e => setSignInPassword(e.target.value)} />
