@@ -5,6 +5,7 @@
     vertical-align: middle;
     text-align: center;
     display: table-cell !important;
+    position: relative;
 
     box-sizing: border-box !important;
     -moz-box-sizing: border-box !important;
@@ -31,6 +32,10 @@
     display: inline-block !important;
     margin: 0 auto !important;
     padding: 3px !important;
+}
+
+.board-rotate {
+    transform: rotate(180deg);
 }
 
 .square.selected {
@@ -62,4 +67,23 @@
     display: inline-block;
     background-color: black;
     opacity: 0.6;
+}
+
+.col-label, .row-label {
+    position: absolute;
+    font-size: 11px;
+}
+
+.col-label {
+    bottom: 3px;
+    left: 6px;
+}
+
+.row-label {
+    top: 3px;
+    right: 6px;
+}
+
+.anti-rotate {
+    transform: rotate(-180deg);
 }
