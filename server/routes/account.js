@@ -12,7 +12,7 @@ router.post('/sign-in', (req, res, next) => {
         } else {
             req.logIn(user, err => {
                 if (err) {
-                    return res.status(400).json(err);
+                    return res.status(400).json({ error: err });
                 } else {
                     return res.status(200).json({success: true});
                 }
@@ -30,13 +30,22 @@ router.post('/sign-up', (req, res, next) => {
         } else {
             req.logIn(user, err => {
                 if (err) {
-                    return res.status(400).json(err);
+                    return res.status(400).json({ error: err });
                 } else {
                     return res.status(200).json({success: true});
                 }
             })
         }
     })(req, res, next)
+})
+
+router.post('/log-out', (req, res, next) => {
+    req.logOut();
+    return res.sendStatus(200);
+})
+
+router.post('/get-data', (req, res, next) => {
+    return res.status(200).json({ loggedIn: req.user != undefined, username: req.user?.username })
 })
 
 export default router;
