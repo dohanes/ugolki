@@ -1,6 +1,7 @@
 import React from 'react';
 import Board from './board.js';
 import GameTools from 'ugolki-lib/game-tools';
+import { Card, Row, Col } from 'react-bootstrap';
 
 class Game extends React.Component {
     constructor(props, state, turn) {
@@ -12,7 +13,18 @@ class Game extends React.Component {
     }
 
     render() {
-        return <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} />;
+        return (
+            <Card>
+                <Row>
+                    <Col>
+                        <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} />
+                    </Col>
+                    <Col>
+                        <p>State: {this.state.tiles}</p><p>Game ID: {this.tools.stateInBase32()}</p> <p>Current Turn: {this.tools.turn === '1' ? 'White' : 'Black'}</p> <p>Winner: {this.tools.winner === '0' ? 'None' : this.tools.winner === '1' ? 'White' : 'Black'}</p>
+                    </Col>
+                </Row>
+            </Card>
+        );
     }
 
     runTools(ret) {

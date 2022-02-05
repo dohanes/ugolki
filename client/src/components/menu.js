@@ -71,9 +71,8 @@ function Menu() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
-                    <Nav.Link href="#">Play Online</Nav.Link>
-                    <Nav.Link href="#">Play Singleplayer</Nav.Link>
-                    
+                    <Nav.Link href="/">Play Singleplayer</Nav.Link>
+                    <Nav.Link href="/online">Play Online</Nav.Link>
                 </Nav>
                 {(loggedIn ? loggedInLinks() : notLoggedInLinks())}
             </Navbar.Collapse>
