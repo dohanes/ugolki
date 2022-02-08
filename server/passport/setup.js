@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
 
-import { validateSignIn, validateSignUp } from 'ugolki-lib';
+import { validateSignIn, validateSignUp } from '../../lib/index.js';
 
 import passport from 'passport';
 
 import { Strategy as LocalStrategy } from 'passport-local';
 
-import db from 'db';
+import db from '../../db/index.js';
 
 const { User } = db.models;
 

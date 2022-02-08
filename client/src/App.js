@@ -14,7 +14,10 @@ function App() {
         <Container>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/online" element={<Online />} />
+                <Route path="/online">
+                    <Route path="" element={<Online />} />
+                    <Route path=":uuid" element={<Online />} />
+                </Route>
             </Routes>
             <Footer />
         </Container>

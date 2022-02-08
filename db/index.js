@@ -17,6 +17,13 @@ for (const fileName of fs.readdirSync('./db/models')) {
     }
 }
 
+const { User, Game } = sequelize.models;
+
+User.hasMany(Game, {foreignKey: 'white'})
+User.hasMany(Game, {foreignKey: 'black'})
+Game.belongsTo(User, {foreignKey: 'white'})
+Game.belongsTo(User, {foreignKey: 'black'})
+
 sequelize.sync();
 
 export default sequelize;

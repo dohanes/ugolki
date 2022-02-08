@@ -21,7 +21,7 @@ export default class Game extends Model {
                 references: {
                     model: 'Users',
                     key: 'id'
-                }
+                },
             },
             black: {
                 type: DataTypes.BIGINT,
@@ -47,6 +47,12 @@ export default class Game extends Model {
                 type: DataTypes.TEXT,
                 allowNull: true,
             }
-        }, { sequelize, modelName: 'Game' })
+        }, { sequelize, modelName: 'Game', validate: {
+            atLeastOnePlayer() {
+                if (this.black === null && this.white === null) {
+                    throw new Error("The game must have at least one player to start!")
+                }
+            }
+        } })
     }
 }
