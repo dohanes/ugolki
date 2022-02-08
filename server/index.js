@@ -14,9 +14,8 @@ import session from 'express-session';
 import passport from '../server/passport/setup.js';
 import pgSession from 'connect-session-sequelize';
 import fs from 'fs';
-import path from 'path';
 import bodyParser from 'body-parser';
-import sanitize from 'sanitize-filename';
+import rateLimit from 'express-rate-limit'
 
 
 const app = express();
@@ -36,11 +35,18 @@ app.use(session({
     secret: (process.env.SESSION_SECRET == undefined || process.env.SESSION_SECRET.length < 12) ? randomString.generate() : process.env.SESSION_SECRET,
     resave: true,
     proxy: true,
+    secure: true,
     cookie: { sameSite: true, maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+}))
 
 app.listen(3001, () => {
     console.log(`Server listening on port 3001`);
@@ -51,14 +57,6 @@ for (const fileName of fs.readdirSync('./server/routes')) {
     app.use('/api/' + fileName.replace('.js', ''), route)
 }
 
-/*
-app.get('*', (req, res) => {
-    let url = sanitize(req.originalUrl);
-    console.log(url)
-    res.sendFile(path.resolve('./client/build', !url ? 'index.html' : url));
-});
-*/
-
-/*app.use("*", (req, res, next) => {
+app.use("*", (req, res, next) => {
     return res.sendStatus(404);
-})*/
+})
