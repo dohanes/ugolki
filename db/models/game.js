@@ -36,6 +36,10 @@ export default class Game extends Model {
             ended: {
                 type: DataTypes.DATE,
                 allowNull: true,
+            },
+            pun: {
+                type: DataTypes.TEXT,
+                allowNull: true,
             }
         }, { sequelize, modelName: 'Game' })
     }

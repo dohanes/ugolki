@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
+import { useLocation } from "react-router-dom";
 
 function Menu() {
 
@@ -55,6 +56,8 @@ function Menu() {
         </NavDropdown></Nav>)
     }
 
+    const location = useLocation().pathname;
+
     return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
         <Container>
@@ -71,8 +74,8 @@ function Menu() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
-                    <Nav.Link href="/">Play Singleplayer</Nav.Link>
-                    <Nav.Link href="/online">Play Online</Nav.Link>
+                    <Nav.Link href="/" className={location === '/' ? 'active' : ''}>Play Singleplayer</Nav.Link>
+                    <Nav.Link href="/online" className={location === '/online' ? 'active' : ''}>Play Online</Nav.Link>
                 </Nav>
                 {(loggedIn ? loggedInLinks() : notLoggedInLinks())}
             </Navbar.Collapse>
