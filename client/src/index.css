@@ -60,6 +60,10 @@
     border: 5px solid #dfdfdfbd;
 }
 
+.board-rotate .token {
+    margin-top: 5px;
+}
+
 .possibility {
     width: 40%;
     height: 40%;
