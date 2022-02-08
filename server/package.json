@@ -23,6 +23,7 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "randomstring": "^1.2.2",
+    "sanitize-filename": "^1.6.3",
     "sequelize": "^6.15.0"
   }
 }

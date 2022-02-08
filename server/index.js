@@ -16,6 +16,7 @@ import pgSession from 'connect-session-sequelize';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import sanitize from 'sanitize-filename';
 
 
 const app = express();
@@ -41,8 +42,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.listen(3000, () => {
-    console.log(`Server listening on port 3000`);
+app.listen(3001, () => {
+    console.log(`Server listening on port 3001`);
 });
 
 for (const fileName of fs.readdirSync('./server/routes')) {
@@ -50,10 +51,13 @@ for (const fileName of fs.readdirSync('./server/routes')) {
     app.use('/api/' + fileName.replace('.js', ''), route)
 }
 
+/*
 app.get('*', (req, res) => {
-    let url = req.originalUrl.substring(1);
+    let url = sanitize(req.originalUrl);
+    console.log(url)
     res.sendFile(path.resolve('./client/build', !url ? 'index.html' : url));
 });
+*/
 
 /*app.use("*", (req, res, next) => {
     return res.sendStatus(404);

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { GameTools } from 'ugolki-lib';
+//import GameTools from 'ugolki-lib/game-tools';
 const router = Router();
 
 router.post('/create', (req, res, next) => {

@@ -4,10 +4,9 @@
   "description": "The public and open-source way to play Ugolki online.\r [Play it live on Ugolki.net!](https://www.ugolki.net/)",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
+    "start": "concurrently \"node server/index.js\" \"cd client && npm start\"",
     "postinstall": "(cd client && npm install) && (cd lib && npm install) && (cd db && npm install) && (cd server && npm install && npm link ugolki-lib db)",
-    "build": "cd client && npm install && npm link ugolki-lib && npm run build",
-    "dev": "cd client && npm start"
+    "build": "cd client && npm install && npm link ugolki-lib && npm run build"
   },
   "repository": {
     "type": "git",
