@@ -9,9 +9,15 @@ export default class Game extends Model {
                 primaryKey: true,
                 autoIncrement: true
             },
+            uuid: {
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
+                allowNull: false,
+                unique: true
+            },
             white: {
                 type: DataTypes.BIGINT,
-                allowNull: false,
+                allowNull: true,
                 references: {
                     model: 'Users',
                     key: 'id'
@@ -19,7 +25,7 @@ export default class Game extends Model {
             },
             black: {
                 type: DataTypes.BIGINT,
-                allowNull: false,
+                allowNull: true,
                 references: {
                     model: 'Users',
                     key: 'id'
@@ -31,7 +37,7 @@ export default class Game extends Model {
             },
             started: {
                 type: DataTypes.DATE,
-                allowNull: false,
+                allowNull: true,
             },
             ended: {
                 type: DataTypes.DATE,

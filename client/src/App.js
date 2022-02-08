@@ -5,14 +5,16 @@ import Footer from './components/footer.js';
 import Container from 'react-bootstrap/Container';
 import Modals from './components/modals.js';
 import Home from './pages/home.js';
+import Online from './pages/online.js';
 
 function App() {
     return (<>
         <Menu />
+        <br/>
         <Container>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="about" element={null} />
+                <Route path="/online" element={<Online />} />
             </Routes>
             <Footer />
         </Container>

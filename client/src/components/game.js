@@ -17,14 +17,16 @@ class Game extends React.Component {
     render() {
         return (
             <Card>
-                <Row>
-                    <Col>
-                        <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} />
-                    </Col>
-                    <Col>
-                        <p>State: {this.state.tiles}</p><p>Game ID: {this.tools.stateInBase32()}</p> <p>Current Turn: {this.state.turn === '1' ? 'White' : 'Black'}</p> <p>Winner: {this.state.winner === '0' ? 'None' : this.state.winner === '1' ? 'White' : 'Black'}<br />PUN: {this.state.pun}</p>
-                    </Col>
-                </Row>
+                <Card.Body>
+                    <Row>
+                        <Col>
+                            <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} />
+                        </Col>
+                        <Col>
+                            <p>Current Turn: {this.state.turn === '1' ? 'White' : 'Black'}<br />Winner: {this.state.winner === '0' ? 'None' : this.state.winner === '1' ? 'White' : 'Black'}</p><p>USN: <code>{this.state.tiles}</code><br/>Mini-USN: <code>{this.tools.stateInBase32()}</code><br/>PUN: <code>{this.state.pun}</code></p>
+                        </Col>
+                    </Row>
+                </Card.Body>
             </Card>
         );
     }
