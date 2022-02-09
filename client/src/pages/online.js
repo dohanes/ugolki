@@ -13,6 +13,8 @@ function Online() {
     let [gameUUID, setGameUUID] = useState(useParams()?.uuid || null);
     let [playingAs, setPlayingAs] = useState(null);
 
+    let [gameState, setGameState] = useState(null);
+
     let [playingAgainst, setPlayingAgainst] = useState(null);
 
     const invited = useParams()?.uuid !== undefined;
@@ -63,6 +65,30 @@ function Online() {
             } else {
                 alert(data.reason)
                 setStartLabel('Start Game')
+            }
+        })
+    }
+
+    function joinGame() {
+        fetch("/api/game/join-game", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ uuid: gameUUID })
+        }).then(res => {
+            if (res.status === 200) {
+                return res.json();
+            } else {
+                alert("An unknown error occurred while trying to join the game.")
+            }
+        }).then(data => {
+            if (data.success) {
+                setGameState(data.state)
+                setCurrentState('PLAY')
+            } else {
+                alert(data.reason)
             }
         })
     }
@@ -147,14 +173,45 @@ function Online() {
             <Card.Body className="text-center">
                 <h3>Join Game</h3>
                 <p>Playing against: {playingAgainst}<br/>Playing as: {playingAs}</p>
+                <Button onClick={joinGame}>Play!</Button>
             </Card.Body>
         </Card>);
     }
 
+    function playScreen() {
+        return (<Game state={gameState} />)
+    }
+
+    useEffect(() => {
+        const intvl = setInterval(intvl => {
+            if (currentState === 'WAIT') {
+                fetch("/api/game/check-if-joined", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uuid: gameUUID })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.joined) {
+                        setGameState(data.state)
+                        setPlayingAgainst(data.playingAgainst)
+                        setCurrentState('PLAY')
+                    }
+                })
+            } else if (currentState === 'PLAY') {
+
+            }
+        }, 5000)
+        return () => clearInterval(intvl);
+    })
+
 
     switch(currentState) {
         case 'WAIT': return waitingScreen();
-        case 'PLAY': return (<Game />);
+        case 'PLAY': return playScreen();
         case 'JOIN': return joinScreen();
         default: return startScreen();
     }

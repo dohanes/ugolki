@@ -4,7 +4,7 @@ import db from '../../db/index.js';
 import { Op } from 'sequelize';
 const router = Router();
 
-const { Game } = db.models;
+const { Game, User } = db.models;
 
 router.post('/create', async (req, res, next) => {
     if (!req.user) return res.status(200).json({ success: false, reason: "You must be signed in to start a game!" })
@@ -35,11 +35,23 @@ router.post('/get-invite-details', async (req, res, next) => {
     const game = await Game.findOne({
         where: {
             uuid: req.body.uuid
-        }
+        },
+        include: [
+            {
+                model: User,
+                as: 'whitePlayer',
+                foreignKey: 'white'
+            },
+            {
+                model: User,
+                as: 'blackPlayer',
+                foreignKey: 'black'
+            }
+        ]
     })
 
     if (game) {
-        return res.status(200).json({ success: true, playingAs: !game.white ? 'WHITE' : 'BLACK', playingAgainst: game.white || game.black, type: game.type })
+        return res.status(200).json({ success: true, playingAs: !game.white ? 'WHITE' : 'BLACK', playingAgainst: game.whitePlayer?.username || game.blackPlayer?.username, type: game.type })
     } else {
         return res.status(200).json({ success: false })
     }
@@ -49,7 +61,9 @@ router.post('/join-game', async (req, res, next) => {
     if (!req.user) return res.status(200).json({ success: false, reason: "You must be signed in to join a game!" })
 
     const game = await Game.findOne({
-        uuid: req.body.uuid
+        where: {
+            uuid: req.body.uuid
+        }
     })
 
     if (game && !game.started && (!game.white || !game.black)) {
@@ -60,6 +74,38 @@ router.post('/join-game', async (req, res, next) => {
         }
         game.started = new Date();
         await game.save();
+        return res.status(200).json({success: true, state: game.state})
+    } else {
+        return res.status(200).json({success: false, reason: "You cannot join this game anymore!"})
+    }
+})
+
+router.post('/check-if-joined', async (req, res, next) => {
+    if (!req.user) return res.status(200).json({joined: false})
+
+    const game = await Game.findOne({
+        where: {
+            uuid: req.body.uuid,
+            [Op.or]: [{ white: req.user.id, black: { [Op.not]: null } }, { black: req.user.id, white: { [Op.not]: null } }]
+        },
+        include: [
+            {
+                model: User,
+                as: 'whitePlayer',
+                foreignKey: 'white'
+            },
+            {
+                model: User,
+                as: 'blackPlayer',
+                foreignKey: 'black'
+            }
+        ]
+    })
+
+    if (game) {
+        return res.status(200).json({ joined: true, playingAgainst: game.white === req.user.id ? game.blackPlayer.username : game.whitePlayer.username, state: game.state })
+    } else {
+        return res.status(200).json({ joined: false })
     }
 })
 

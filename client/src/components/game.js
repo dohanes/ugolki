@@ -4,8 +4,10 @@ import GameTools from 'ugolki-lib/game-tools';
 import { Card, Row, Col } from 'react-bootstrap';
 
 class Game extends React.Component {
-    constructor(props, state, turn) {
+    constructor(props) {
         super(props)
+
+        const {state, turn} = props;
 
         this.tools = new GameTools(state, turn)
 
