@@ -7,9 +7,9 @@ class Game extends React.Component {
     constructor(props) {
         super(props)
 
-        const {state, turn} = props;
+        const {state, turn, pun} = props;
 
-        this.tools = new GameTools(state, turn)
+        this.tools = new GameTools(state, turn, pun || undefined)
 
         this.state = this.tools.state;
     }
@@ -17,12 +17,15 @@ class Game extends React.Component {
     
 
     render() {
+
+        this.tools.setState({ tiles: this.props.state, turn: this.props.turn, pun: this.props.pun })
+
         return (
             <Card>
                 <Card.Body>
                     <Row>
                         <Col>
-                            <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} player={this.props.player} />
+                            <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} player={this.props.player} uuid={this.props.uuid} />
                         </Col>
                         <Col>
                             <p>Current Turn: {this.state.turn === '1' ? 'White' : 'Black'}<br />Winner: {this.state.winner === '0' ? 'None' : this.state.winner === '1' ? 'White' : 'Black'}</p><p>USN: <code>{this.state.tiles}</code><br/>Mini-USN: <code>{this.tools.stateInBase32()}</code><br/>PUN: <code>{this.state.pun}</code></p>

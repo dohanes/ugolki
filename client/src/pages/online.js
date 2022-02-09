@@ -12,8 +12,10 @@ function Online() {
 
     let [gameUUID, setGameUUID] = useState(useParams()?.uuid || null);
     let [playingAs, setPlayingAs] = useState(null);
+    let [gamePUN, setGamePUN] = useState(null);
 
     let [gameState, setGameState] = useState(null);
+    let [gameTurn, setGameTurn] = useState('1');
 
     let [playingAgainst, setPlayingAgainst] = useState(null);
 
@@ -40,6 +42,8 @@ function Online() {
                                 setGameState(data.state)
                                 setPlayingAs(data.playingAs)
                                 setPlayingAgainst(data.playingAgainst)
+                                setGamePUN(data.pun)
+                                setGameTurn(data.turn)
                                 setCurrentState('PLAY')
                             } else {
                                 setCurrentState('JOIN')
@@ -186,12 +190,8 @@ function Online() {
         </Card>);
     }
 
-    function playScreen() {
-        return (<Game state={gameState} player={playingAs} />)
-    }
-
     useEffect(() => {
-        const intvl = setInterval(intvl => {
+        const intvl = setInterval(() => {
             if (currentState === 'WAIT') {
                 fetch("/api/game/check-if-joined", {
                     method: 'POST',
@@ -201,16 +201,31 @@ function Online() {
                     },
                     body: JSON.stringify({ uuid: gameUUID })
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.joined) {
-                        setGameState(data.state)
-                        setPlayingAgainst(data.playingAgainst)
-                        setCurrentState('PLAY')
-                    }
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.joined) {
+                            setGameState(data.state)
+                            setPlayingAgainst(data.playingAgainst)
+                            setCurrentState('PLAY')
+                        }
+                    })
             } else if (currentState === 'PLAY') {
-
+                fetch('/api/game/get-status', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uuid: gameUUID })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state !== gameState) {
+                            setGameState(data.state)
+                            setGamePUN(data.pun)
+                            setGameTurn(data.turn)
+                        }
+                    })
             }
         }, 5000)
         return () => clearInterval(intvl);
@@ -219,7 +234,7 @@ function Online() {
 
     switch(currentState) {
         case 'WAIT': return waitingScreen();
-        case 'PLAY': return playScreen();
+        case 'PLAY': return (<Game state={gameState} turn={gameTurn} player={playingAs} uuid={gameUUID} pun={gamePUN} />);
         case 'JOIN': return joinScreen();
         default: return startScreen();
     }

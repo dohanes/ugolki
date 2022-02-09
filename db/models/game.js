@@ -35,6 +35,16 @@ export default class Game extends Model {
                 type: DataTypes.TEXT,
                 allowNull: false,
             },
+            turn: {
+                type: DataTypes.STRING(1),
+                allowNull: false,
+                defaultValue: '1'
+            },
+            winner: {
+                type: DataTypes.STRING(1),
+                allowNull: false,
+                defaultValue: '0'
+            },
             started: {
                 type: DataTypes.DATE,
                 allowNull: true,

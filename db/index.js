@@ -5,7 +5,8 @@ import fs from 'fs';
 
 const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, process.env.PGPASSWORD, {
         host: process.env.PGHOST,
-        dialect: 'postgres'
+        dialect: 'postgres',
+        logging: false
     });
 
 for (const fileName of fs.readdirSync('./db/models')) {

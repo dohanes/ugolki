@@ -59,14 +59,16 @@ router.post('/get-invite-details', async (req, res, next) => {
                 type: game.type,
                 started: true, 
                 isPlayer: game.white === req.user?.id || game.black === req.user?.id, 
-                state: game.state 
+                state: game.state,
+                pun: game.pun,
+                turn: game.turn
             })
         } else {
             return res.status(200).json({ 
                 success: true, 
                 playingAs: !game.white ? 'WHITE' : 'BLACK', 
                 playingAgainst: game.whitePlayer?.username || game.blackPlayer?.username, 
-                type: game.type, ...startedGame 
+                type: game.type
             })
         }
         
@@ -124,6 +126,61 @@ router.post('/check-if-joined', async (req, res, next) => {
         return res.status(200).json({ joined: true, playingAgainst: game.white === req.user.id ? game.blackPlayer.username : game.whitePlayer.username, state: game.state })
     } else {
         return res.status(200).json({ joined: false })
+    }
+})
+
+router.post('/move', async (req, res, next) => {
+    if (!req.user) return res.status(200).json({ success: false, reason: "You are not logged in!" })
+
+    const game = await Game.findOne({
+        where: {
+            uuid: req.body.uuid,
+            [Op.or]: [{ white: req.user.id, black: { [Op.not]: null } }, { black: req.user.id, white: { [Op.not]: null } }],
+            started: { [Op.not]: null },
+            ended: null
+        },
+    })
+
+    if (game) {
+        const playerId = req.user.id === game.white ? '1' : req.user.id === game.black ? '2' : null;
+
+        if (!playerId) return res.status(200).json({ success: false, reason: "An unknown error occurred." })
+
+        const gameTools = new GameTools(game.state, game.turn, game.pun);
+        
+        const validator = gameTools.move(playerId, req.body.from, req.body.to)
+
+        if (!validator.success) {
+            return res.status(200).json({ success: false, reason: validator.reason })
+        } else {
+            const gameObj = {
+                state: validator.tiles,
+                turn: validator.turn,
+                pun: validator.pun,
+                winner: validator.win,
+                ended: validator.win === '0' ? null : new Date()
+            }
+            game.set(gameObj)
+            game.save();
+
+            return res.status(200).json({success: true, ...gameObj})
+        }
+    } else {
+        return res.status(200).json({success: false, reason: "Could not find that game!"})
+    }
+})
+
+router.post('/get-status', async (req, res, next) => {
+    const game = await Game.findOne({
+        where: {
+            uuid: req.body.uuid
+        }
+    })
+
+    if (game) {
+        return res.status(200).json({ success: true, state: game.state, pun: game.pun, turn: game.turn })
+    } else {
+        return res.status(200).json({ success: false, reason: "Could not find that game!" })
     }
 })
 

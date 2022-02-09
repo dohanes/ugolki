@@ -12,9 +12,25 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
-        if (this.props.player !== 'NONE') {
+        if (this.props.player === undefined || this.props.player !== 'NONE') {
             if (this.props.winner === '0') {
                 if (this.possibilities.includes(i)) {
+                    if (this.props.player !== undefined) {
+                        fetch("/api/game/move", {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ uuid: this.props.uuid, from: this.state.selected, to: i })
+                        })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (!data.success) {
+                                window.location.reload(false)
+                            }
+                        })
+                    }
                     this.props.move(this.state.selected, i)
                     this.possibilities = [];
                     this.setState({ selected: null })
