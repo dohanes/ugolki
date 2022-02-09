@@ -51,7 +51,25 @@ router.post('/get-invite-details', async (req, res, next) => {
     })
 
     if (game) {
-        return res.status(200).json({ success: true, playingAs: !game.white ? 'WHITE' : 'BLACK', playingAgainst: game.whitePlayer?.username || game.blackPlayer?.username, type: game.type })
+        if (game.started !== null) {
+            return res.status(200).json({ 
+                success: true, 
+                playingAs: req.user ? (game.white === req.user.id ? 'WHITE' : game.black === req.user.id ? 'BLACK' : 'NONE') : null, 
+                playingAgainst: req.user ? (game.white === req.user.id ? game.blackPlayer?.username : game.black === req.user.id ? game.whitePlayer?.username : null) : null, 
+                type: game.type,
+                started: true, 
+                isPlayer: game.white === req.user?.id || game.black === req.user?.id, 
+                state: game.state 
+            })
+        } else {
+            return res.status(200).json({ 
+                success: true, 
+                playingAs: !game.white ? 'WHITE' : 'BLACK', 
+                playingAgainst: game.whitePlayer?.username || game.blackPlayer?.username, 
+                type: game.type, ...startedGame 
+            })
+        }
+        
     } else {
         return res.status(200).json({ success: false })
     }

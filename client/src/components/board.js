@@ -12,17 +12,19 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
-        if (this.props.winner === '0') {
-            if (this.possibilities.includes(i)) {
-                this.props.move(this.state.selected, i)
-                this.possibilities = [];
-                this.setState({ selected: null })
-            } else if (this.props.tiles[i] === this.props.turn && this.state.selected !== i) {
-                this.setState({ selected: i })
-                this.possibilities = this.props.possible_moves(i)
-            } else {
-                this.setState({ selected: null })
-                this.possibilities = [];
+        if (this.props.player !== 'NONE') {
+            if (this.props.winner === '0') {
+                if (this.possibilities.includes(i)) {
+                    this.props.move(this.state.selected, i)
+                    this.possibilities = [];
+                    this.setState({ selected: null })
+                } else if (this.props.tiles[i] === this.props.turn && this.state.selected !== i && !(this.props.player !== undefined && this.props.tiles[i] !== (this.props.player === 'WHITE' ? '1' : '2'))) {
+                    this.setState({ selected: i })
+                    this.possibilities = this.props.possible_moves(i)
+                } else {
+                    this.setState({ selected: null })
+                    this.possibilities = [];
+                }
             }
         }
     }

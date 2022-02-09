@@ -35,7 +35,15 @@ function Online() {
                         if (data.success) {
                             setPlayingAs(data.playingAs)
                             setPlayingAgainst(data.playingAgainst)
-                            setCurrentState('JOIN')
+                            setType(data.type)
+                            if (data.started) {
+                                setGameState(data.state)
+                                setPlayingAs(data.playingAs)
+                                setPlayingAgainst(data.playingAgainst)
+                                setCurrentState('PLAY')
+                            } else {
+                                setCurrentState('JOIN')
+                            }
                         }
                     })
             }
@@ -179,7 +187,7 @@ function Online() {
     }
 
     function playScreen() {
-        return (<Game state={gameState} />)
+        return (<Game state={gameState} player={playingAs} />)
     }
 
     useEffect(() => {
