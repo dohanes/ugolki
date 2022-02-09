@@ -18,7 +18,16 @@ class Game extends React.Component {
 
     render() {
 
-        this.tools.setState({ tiles: this.props.state, turn: this.props.turn, pun: this.props.pun })
+        if (this.props.state !== undefined) {
+            this.tools.setState({ tiles: this.props.state })
+        }
+        if (this.props.turn !== undefined) {
+            this.tools.setState({ turn: this.props.turn })
+        }
+        if (this.props.pun !== undefined) {
+            this.tools.setState({ pun: this.props.pun })
+        }
+        
 
         return (
             <Card>

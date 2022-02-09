@@ -52,7 +52,7 @@ class Board extends React.Component {
                 {
                     tiles.map((t, i) => {
                         let squareIndex = (i + (index * 8));
-                        return <Square antiRotate={this.props.player !== null ? this.props.player === 'WHITE' : this.props.turn === '1'} type={t} key={squareIndex} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} is_possibility={this.possibilities.includes(squareIndex)} />
+                        return <Square antiRotate={this.props.player !== undefined ? this.props.player === 'WHITE' : this.props.turn === '1'} type={t} key={squareIndex} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} is_possibility={this.possibilities.includes(squareIndex)} />
                     })
                 }
             </div>
@@ -64,7 +64,7 @@ class Board extends React.Component {
         for (var i = 0; i < this.props.tiles.length; i += 8) {
             tilesByRow.push([this.props.tiles.substr(i, 8)])
         }
-        return (<div key="board" className={"board" + ((this.props.player !== null ? this.props.player === 'WHITE' : this.props.turn === '1') ? ' board-rotate' : '')}> {
+        return (<div key="board" className={"board" + ((this.props.player !== undefined ? this.props.player === 'WHITE' : this.props.turn === '1') ? ' board-rotate' : '')}> {
             tilesByRow.map((tileRow, index) => {
                 return this.renderSquares(tileRow, index)
             })
