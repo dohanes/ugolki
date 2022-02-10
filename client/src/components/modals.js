@@ -14,6 +14,7 @@ function Modals() {
         const verify = validateSignUp(signUpUsername, signUpPassword);
 
         if (verify.ok) {
+            console.log('yep1')
             setSignUpError('')
             let status;
             fetch("/api/account/sign-up", {
@@ -29,6 +30,7 @@ function Modals() {
                 return res.json()
             })
             .then((data) => {
+                console.log(status)
                 if (status === 400) {
                     setSignUpError(data.error)
                 } else if (status === 200) {

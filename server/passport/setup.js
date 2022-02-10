@@ -50,7 +50,7 @@ passport.use('local-signup', new LocalStrategy({}, async (username, password, do
         password: hash
     })
 
-    return done(null, createdUser.id);
+    return done(null, createdUser);
 })
 )
 
