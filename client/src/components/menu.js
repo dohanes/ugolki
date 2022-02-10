@@ -61,7 +61,7 @@ function Menu() {
     return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
         <Container>
-                <Navbar.Brand href="#home">
+                <Navbar.Brand href="/">
                     <img
                         alt=""
                         src="/logo192.png"
@@ -75,7 +75,7 @@ function Menu() {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/" className={location === '/' ? 'active' : ''}>Play Singleplayer</Nav.Link>
-                    <Nav.Link href="/online" className={location === '/online' ? 'active' : ''}>Play Online</Nav.Link>
+                    <Nav.Link href="/online" className={location.startsWith('/online') ? 'active' : ''}>Play Online</Nav.Link>
                 </Nav>
                 {(loggedIn ? loggedInLinks() : notLoggedInLinks())}
             </Navbar.Collapse>

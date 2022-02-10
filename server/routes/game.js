@@ -61,7 +61,8 @@ router.post('/get-invite-details', async (req, res, next) => {
                 isPlayer: game.white === req.user?.id || game.black === req.user?.id, 
                 state: game.state,
                 pun: game.pun,
-                turn: game.turn
+                turn: game.turn,
+                winner: game.winner
             })
         } else {
             return res.status(200).json({ 
@@ -178,7 +179,65 @@ router.post('/get-status', async (req, res, next) => {
     })
 
     if (game) {
-        return res.status(200).json({ success: true, state: game.state, pun: game.pun, turn: game.turn })
+        return res.status(200).json({ success: true, state: game.state, pun: game.pun, turn: game.turn, winner: game.winner })
+    } else {
+        return res.status(200).json({ success: false, reason: "Could not find that game!" })
+    }
+})
+
+router.post('/get-active', async (req, res, next) => {
+    if (!req.user) return res.status(200).json({ success: false, reason: "You are not logged in!" })
+
+    const games = await Game.findAll({
+        where: {
+            [Op.or]: [{white: req.user.id}, {black: req.user.id}],
+            ended: null,
+            winner: '0'
+        },
+        include: [
+            {
+                model: User,
+                as: 'whitePlayer',
+                foreignKey: 'white'
+            },
+            {
+                model: User,
+                as: 'blackPlayer',
+                foreignKey: 'black'
+            }
+        ]
+    })
+
+    return res.status(200).json({ success: true, games: games.map(game => (
+        {
+            uuid: game.uuid,
+            opponent: game.white === req.user.id ? game.blackPlayer.username : game.whitePlayer.username,
+            type: game.type,
+            started: game.started,
+            yourTurn: (game.white === req.user.id ? '1' : '2') === game.turn
+        }
+    ))})
+})
+
+router.post('/resign', async(req, res, next) => {
+    if (!req.user) return res.status(200).json({ success: false, reason: "You are not logged in!" })
+
+    const game = await Game.findOne({
+        where: {
+            [Op.or]: [{ white: req.user.id }, { black: req.user.id }],
+            winner: '0',
+            ended: null,
+            started: {[Op.not]: null}
+        }
+    })
+
+    if (game) {
+        game.set({
+            winner: game.white === req.user.id ? '2' : '1',
+            ended: new Date()
+        })
+        game.save();
+        return res.status(200).json({success: true, winner: game.winner})
     } else {
         return res.status(200).json({ success: false, reason: "Could not find that game!" })
     }

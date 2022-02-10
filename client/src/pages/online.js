@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 function Online() {
 
-    let [currentState, setCurrentState] = useState('START');
+    let [currentState, setCurrentState] = useState('');
     let [color, setColor] = useState('RANDOM');
     let [type, setType] = useState('3x4');
     let [startLabel, setStartLabel] = useState('Start Game');
@@ -16,10 +16,29 @@ function Online() {
 
     let [gameState, setGameState] = useState(null);
     let [gameTurn, setGameTurn] = useState('1');
+    let [gameWinner, setGameWinner] = useState('0');
 
     let [playingAgainst, setPlayingAgainst] = useState(null);
 
+    let [activeGames, setActiveGames] = useState([]);
+
     const invited = useParams()?.uuid !== undefined;
+
+    useEffect(() => {
+        fetch("/api/game/get-active", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then((data) => {
+            if (data.success) {
+                setActiveGames(data.games)
+            }
+        })
+    }, [])
 
     useEffect(() => {
         if (invited) {
@@ -44,6 +63,7 @@ function Online() {
                                 setPlayingAgainst(data.playingAgainst)
                                 setGamePUN(data.pun)
                                 setGameTurn(data.turn)
+                                setGameWinner(data.winner)
                                 setCurrentState('PLAY')
                             } else {
                                 setCurrentState('JOIN')
@@ -51,8 +71,10 @@ function Online() {
                         }
                     })
             }
+        } else {
+            setCurrentState('START')
         }
-    })
+    }, [gameUUID, invited])
 
     function startInvitation() {
         setStartLabel('Starting Game...')
@@ -106,13 +128,14 @@ function Online() {
     }
 
     function startScreen() {
-        return (<Card>
+        return (<><Card>
             <Card.Body className="text-center">
                 <h3>New Online Game</h3>
                 <div key="game-color-radio" className="mb-3">
                     <Form.Check
                         inline
                         label="White"
+                        checked={color === 'WHITE'}
                         name="color"
                         type="radio"
                         id="game-color-radio-1"
@@ -121,6 +144,7 @@ function Online() {
                     <Form.Check
                         inline
                         label="Black"
+                        checked={color === 'BLACK'}
                         name="color"
                         type="radio"
                         id="game-color-radio-2"
@@ -128,7 +152,7 @@ function Online() {
                     />
                     <Form.Check
                         inline
-                        checked={true}
+                        checked={color === 'RANDOM'}
                         label="Random"
                         name="color"
                         type="radio"
@@ -140,6 +164,7 @@ function Online() {
                     <Form.Check
                         inline
                         label="3x3"
+                        checked={type === '3x3'}
                         name="type"
                         type="radio"
                         id="game-type-radio-1"
@@ -147,7 +172,7 @@ function Online() {
                     />
                     <Form.Check
                         inline
-                        checked={true}
+                        checked={type === '3x4'}
                         label="3x4"
                         name="type"
                         type="radio"
@@ -157,6 +182,7 @@ function Online() {
                     <Form.Check
                         inline
                         label="4x4"
+                        checked={type === '4x4'}
                         name="type"
                         type="radio"
                         id="game-type-radio-3"
@@ -165,7 +191,22 @@ function Online() {
                 </div>
                 <Button onClick={startInvitation} disabled={startLabel !== 'Start Game'}>{startLabel}</Button>
             </Card.Body>
-        </Card>);
+        </Card>
+        <br/>
+        <Card>
+            <Card.Body>
+                <h4>Active Games</h4>
+                {!activeGames.length ? <p>No active games! Why not start one?</p> : activeGames.map(game => <Card><Card.Body><b>Game with {game.opponent}</b> [{game.yourTurn ? 'Your Turn' : game.opponent + "'s Turn"}] <i className="text-muted">(Started {(new Date(game.started).toString())})</i><Button href={"/online/"+game.uuid} className="float-end" size="sm">Play</Button></Card.Body></Card>)}
+            </Card.Body>
+        </Card>
+        <br/>
+        <Card>
+            <Card.Body>
+                <h4>Game History</h4>
+                <a href="/history">View your game history here.</a>
+            </Card.Body>
+        </Card>
+        </>);
     }
 
     function waitingScreen() {
@@ -209,34 +250,18 @@ function Online() {
                             setCurrentState('PLAY')
                         }
                     })
-            } else if (currentState === 'PLAY') {
-                fetch('/api/game/get-status', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ uuid: gameUUID })
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.state !== gameState) {
-                            setGameState(data.state)
-                            setGamePUN(data.pun)
-                            setGameTurn(data.turn)
-                        }
-                    })
             }
-        }, 5000)
+        }, 2500)
         return () => clearInterval(intvl);
     })
 
 
     switch(currentState) {
         case 'WAIT': return waitingScreen();
-        case 'PLAY': return (<Game state={gameState} turn={gameTurn} player={playingAs} uuid={gameUUID} pun={gamePUN} />);
+        case 'PLAY': return (<Game state={gameState} turn={gameTurn} player={playingAs} uuid={gameUUID} pun={gamePUN} winner={gameWinner === '0' ? undefined : gameWinner} />);
         case 'JOIN': return joinScreen();
-        default: return startScreen();
+        case 'START': return startScreen();
+        default: return (<Card className="text-center"><Card.Body><h5>Loading...</h5></Card.Body></Card>);
     }
 }
 
