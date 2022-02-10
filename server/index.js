@@ -49,8 +49,10 @@ app.use(rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 }))
 
-app.listen(3001, () => {
-    console.log(`Server listening on port 3001`);
+const PORT = process.env.SERVER_PORT || 3001;
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
 
 for (const fileName of fs.readdirSync('./server/routes')) {
