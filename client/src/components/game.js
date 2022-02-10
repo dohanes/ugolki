@@ -15,7 +15,7 @@ class Game extends React.Component {
     }
 
     async componentDidMount() {
-        if (this.props.player) {
+        if (this.props.player !== undefined) {
             this.moveInterval = setInterval(() => {
                 fetch('/api/game/get-status', {
                     method: 'POST',
