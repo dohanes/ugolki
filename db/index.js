@@ -26,6 +26,4 @@ User.hasMany(Game, {foreignKey: 'black', as: 'blackPlayer'})
 Game.belongsTo(User, { foreignKey: 'white', as: 'whitePlayer' })
 Game.belongsTo(User, { foreignKey: 'black', as: 'blackPlayer' })
 
-sequelize.sync();
-
 export default sequelize;
