@@ -15,27 +15,29 @@ class Game extends React.Component {
     }
 
     async componentDidMount() {
-        this.moveInterval = setInterval(() => {
-            fetch('/api/game/get-status', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ uuid: this.props.uuid })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (this.tools.winner !== data.winner || data.state !== this.tools.tiles) {
-                    this.tools.winner = data.winner;
-                    this.tools.tiles = data.state
-                    this.tools.pun = data.pun
-                    this.tools.turn = data.turn
-                    this.runTools()
-                }
-                
-            })
-        }, 2500)
+        if (this.props.player) {
+            this.moveInterval = setInterval(() => {
+                fetch('/api/game/get-status', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uuid: this.props.uuid })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (this.tools.winner !== data.winner || data.state !== this.tools.tiles) {
+                        this.tools.winner = data.winner;
+                        this.tools.tiles = data.state
+                        this.tools.pun = data.pun
+                        this.tools.turn = data.turn
+                        this.runTools()
+                    }
+                    
+                })
+            }, 2500)
+        }
     }
 
     async componentWillUnmount() {
