@@ -6,6 +6,8 @@ import Container from 'react-bootstrap/Container';
 import Modals from './components/modals.js';
 import Home from './pages/home.js';
 import Online from './pages/online.js';
+import NotFound from './pages/not-found.js'
+import Profile from './pages/profile.js'
 
 function App() {
     return (<>
@@ -13,10 +15,15 @@ function App() {
         <br/>
         <Container>
             <Routes>
+                <Route path="*" element={<NotFound />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/online">
                     <Route path="" element={<Online />} />
                     <Route path=":uuid" element={<Online />} />
+                </Route>
+                <Route path="/profile">
+                    <Route path="" element={<Profile />} />
+                    <Route path=":username" element={<Profile />} />
                 </Route>
             </Routes>
             <Footer />

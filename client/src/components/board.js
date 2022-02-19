@@ -64,7 +64,7 @@ class Board extends React.Component {
         for (var i = 0; i < this.props.tiles.length; i += 8) {
             tilesByRow.push([this.props.tiles.substr(i, 8)])
         }
-        return (<div key="board" className={"board" + ((this.props.player !== undefined ? this.props.player === 'WHITE' : this.props.turn === '1') ? ' board-rotate' : '')}> {
+        return (<div key="board embed-responsive embed-responsive-1by1" className={"board" + ((this.props.player !== undefined ? this.props.player === 'WHITE' : this.props.turn === '1') ? ' board-rotate' : '')}> {
             tilesByRow.map((tileRow, index) => {
                 return this.renderSquares(tileRow, index)
             })

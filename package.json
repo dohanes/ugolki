@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"nodemon server/index.js localhost 3001\" \"cd client && npm start\"",
-    "postinstall": "(cd client && npm install) && (cd lib && npm install) && (cd db && npm install) && (cd server && npm install && npm link ugolki-lib db)",
+    "postinstall": "(cd client && npm install && npm link ugolki-lib) && (cd lib && npm install) && (cd db && npm install) && (cd server && npm install)",
     "build": "cd client && npm install && npm link ugolki-lib && npm run build"
   },
   "repository": {
@@ -21,7 +21,10 @@
   "homepage": "https://github.com/dohanes/ugolki#readme",
   "dependencies": {
     "concurrently": "^7.0.0",
-    "express": "^4.17.2"
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "moment": "^2.29.1",
+    "react-moment": "^1.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

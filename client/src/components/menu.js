@@ -22,7 +22,7 @@ function Menu() {
                 setUsername(data.username)
             }
         })
-    })
+    }, [])
 
     function logOut() {
         fetch("/api/account/log-out", {
@@ -49,10 +49,11 @@ function Menu() {
 
     function loggedInLinks() {
         return (<Nav><NavDropdown title={username} id="basic-nav-dropdown">
-            <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+            <NavDropdown.Item href={"/profile/"+username}>Profile</NavDropdown.Item>
             <NavDropdown.Item href="/history">Game History</NavDropdown.Item>
+            <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="#" onClick={logOut}>Log Out</NavDropdown.Item>
+            <NavDropdown.Item className="text-danger" href="#" onClick={logOut}>Log Out</NavDropdown.Item>
         </NavDropdown></Nav>)
     }
 
