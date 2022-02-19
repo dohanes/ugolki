@@ -40,7 +40,7 @@ function Profile() {
                 <Card className="mb-2">
                     <Card.Body>
                         <Button href={`/online/${game.uuid}`} className="float-end">View</Button>
-                        <h5>{game.title}</h5>
+                        <h5><a className="text-secondary" href={`/profile/${game.players[0]}`}>{game.players[0]}</a> vs <a className="text-secondary" href={`/profile/${game.players[1]}`}>{game.players[1]}</a></h5>
                         <span><b>{game.result}</b> - <Moment className="text-muted">{game.started}</Moment></span>
                     </Card.Body>
                 </Card>
