@@ -1,6 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 
+import { Op } from 'sequelize';
 import db from '../../db/index.js';
 const { Game, User } = db.models;
 
@@ -51,6 +52,37 @@ router.post('/get-data', (req, res, next) => {
     return res.status(200).json({ loggedIn: req.user != undefined, username: req.user?.username })
 })
 
+async function getGames(uid, offset) {
+    const games = await Game.findAll({
+        where: {
+            [Op.or]: [{ white: uid }, { black: uid }],
+            winner: { [Op.not]: null }
+        },
+        include: [
+            {
+                model: User,
+                as: 'whitePlayer',
+                foreignKey: 'white'
+            },
+            {
+                model: User,
+                as: 'blackPlayer',
+                foreignKey: 'black'
+            }
+        ],
+        offset: offset || 0,
+        limit: 20
+    })
+
+    return games.map(x => ({
+        title: x.whitePlayer.username + " vs " + x.blackPlayer.username,
+        result: x.winner === '0' ? 'Playing' : x.winner === '1' ? x.whitePlayer.username + ' Won' : x.blackPlayer.username + ' Won',
+        opponent: x.white == uid ? x.blackPlayer.username : x.whitePlayer.username,
+        started: x.started,
+        uuid: x.uuid
+    }))
+}
+
 router.post('/get-profile', async (req, res, next) => {
     let username;
 
@@ -64,7 +96,7 @@ router.post('/get-profile', async (req, res, next) => {
 
     const profile = await User.findOne({
         attributes: {
-            exclude: ['password', 'id']
+            exclude: ['password']
         },
         where: {
             username: username
@@ -74,7 +106,11 @@ router.post('/get-profile', async (req, res, next) => {
     if (!profile) {
         return res.status(200).json({success: false})
     } else {
-        return res.status(200).json({success: true, ...profile.dataValues})
+        return res.status(200).json({
+            success: true,
+            ...profile.dataValues,
+            games: await getGames(profile.id)
+        })
     }
 })
 
