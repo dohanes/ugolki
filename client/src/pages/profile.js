@@ -35,7 +35,8 @@ function Profile() {
                 <h3>{profile.username}</h3>
                 <p>Joined <Moment fromNow>{profile.createdAt}</Moment></p>
                 <hr />
-                <h4 className="mt-4 mb-3">Game History</h4>
+                <h4 className="mt-4">Game History</h4>
+                <p><span className="text-muted">{profile.summary.total} Total</span> | <span className="text-success">{profile.summary.wins} Wins</span> | <span className="text-danger">{profile.summary.losses} Losses</span> | <span className="text-info">{Math.round((profile.summary.wins / profile.summary.total) * 100) / 100} W/L</span></p>
                 {profile.games.map(game => (
                 <Card className="mb-2">
                     <Card.Body>

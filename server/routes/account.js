@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 
-import { Op } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 import db from '../../db/index.js';
 const { Game, User } = db.models;
 
@@ -103,12 +103,19 @@ router.post('/get-profile', async (req, res, next) => {
         }
     })
 
+    const gameCount = await db.query(`SELECT COUNT(*)::int AS "total", SUM(CASE WHEN (winner = '1' AND white = ?) OR (winner = '2' AND black = ?) THEN 1 ELSE 0 END)::int AS "wins" FROM "Games";`, {replacements: [profile.id, profile.id], plain: true, raw: true})
+
     if (!profile) {
         return res.status(200).json({success: false})
     } else {
         return res.status(200).json({
             success: true,
             ...profile.dataValues,
+            summary: {
+                wins: gameCount.wins,
+                losses: gameCount.total - gameCount.wins,
+                total: gameCount.total
+            },
             games: await getGames(profile.id)
         })
     }
