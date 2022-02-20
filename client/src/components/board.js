@@ -12,7 +12,7 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
-        if (this.props.player === undefined || this.props.player !== 'NONE') {
+        if ((this.props.player === undefined || this.props.player !== 'NONE') && !this.props.rewound) {
             if (this.props.winner === '0') {
                 if (this.possibilities.includes(i)) {
                     if (this.props.player !== undefined) {

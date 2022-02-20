@@ -11,7 +11,7 @@ class Game extends React.Component {
 
         this.tools = new GameTools(state, turn, pun || undefined, winner || undefined)
 
-        this.state = { resigning: false, tiles: this.tools.tiles, turn: this.tools.turn, winner: this.tools.winner, pun: this.tools.pun }
+        this.state = { resigning: false, tiles: this.tools.tiles, turn: this.tools.turn, winner: this.tools.winner, pun: this.tools.pun, viewingMove: this.tools.viewingMove || 0, rewoundState: undefined }
     }
 
     async componentDidMount() {
@@ -79,6 +79,22 @@ class Game extends React.Component {
         }
     }
 
+    handleRewind(index) {
+        if (this.state.viewingMove !== index) {
+            this.runTools(this.tools.rewind(index));
+        }
+    }
+
+    moveList() {
+        return (
+            <>
+                {this.tools.getMoveList().map((move, index) => (
+                    <Button variant={(index === this.state.viewingMove ? '' : 'outline-') + 'secondary'} size="sm" onClick={() => this.handleRewind(index)}>{move}</Button>
+                ))}
+            </>
+        )
+    }
+
     
 
     render() {
@@ -88,10 +104,10 @@ class Game extends React.Component {
                 <Card.Body>
                     <Row>
                         <Col>
-                            <Board tiles={this.state.tiles} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} player={this.props.player} uuid={this.props.uuid} />
+                            <Board tiles={this.state.rewoundState || this.state.tiles} rewound={this.state.viewingMove !== 0} turn={this.state.turn} possible_moves={(pos) => this.tools.possible_moves(pos)} move={(pos1, pos2) => this.runTools(this.tools.move(this.state.turn, pos1, pos2))} toBase32={() => this.tools.stateInBase32()} winner={this.state.winner} player={this.props.player} uuid={this.props.uuid} />
                         </Col>
                         <Col>
-                            <p>Current Turn: {this.state.turn === '1' ? 'White' : 'Black'}<br />Winner: {this.state.winner === '0' ? 'None' : this.state.winner === '1' ? 'White' : 'Black'}</p><p>USN: <code>{this.state.tiles}</code><br/>Mini-USN: <code>{this.tools.stateInBase32()}</code><br/>PUN: <code>{this.state.pun}</code></p>{this.multiplayerControls()}
+                            <p>Current Turn: {this.state.turn === '1' ? 'White' : 'Black'}<br />Winner: {this.state.winner === '0' ? 'None' : this.state.winner === '1' ? 'White' : 'Black'}</p><p>USN: <code>{this.state.tiles}</code><br/>Mini-USN: <code>{this.tools.stateInBase32()}</code><br/>PUN: <code>{this.state.pun}</code></p>{this.multiplayerControls()}<br />{this.moveList()}
                         </Col>
                     </Row>
                 </Card.Body>
@@ -100,7 +116,7 @@ class Game extends React.Component {
     }
 
     runTools(ret) {
-        this.setState({ tiles: this.tools.tiles, turn: this.tools.turn, winner: this.tools.winner, pun: this.tools.pun })
+        this.setState({ tiles: this.tools.tiles, turn: this.tools.turn, winner: this.tools.winner, pun: this.tools.pun, viewingMove: this.tools.viewingMove || 0, rewoundState: this.tools.rewoundState })
         return ret;
     }
 }
