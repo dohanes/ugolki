@@ -48,14 +48,12 @@ class Board extends React.Component {
     renderSquares(tileRow, index) {
         let tiles = tileRow[0].split('');
         return (<>
-            <div className="board-row" key={index}>
                 {
                     tiles.map((t, i) => {
                         let squareIndex = (i + (index * 8));
                         return <Square antiRotate={this.props.player !== undefined ? this.props.player === 'WHITE' : this.props.turn === '1'} type={t} key={squareIndex} index={squareIndex} selected={this.state.selected === squareIndex} onClick={() => this.handleClick(squareIndex)} is_possibility={this.possibilities.includes(squareIndex)} />
                     })
                 }
-            </div>
         </>)
     }
 

@@ -1,37 +1,28 @@
 .square {
-    width: 60px;
-    height: 60px;
-    display: inline-block;
+    aspect-ratio: 1 / 1;
     vertical-align: middle;
     text-align: center;
-    display: table-cell !important;
     position: relative;
-
-    box-sizing: border-box !important;
-    -moz-box-sizing: border-box !important;
-    -webkit-box-sizing: border-box !important;
-}
-
-.board-row:nth-of-type(odd) .square:nth-of-type(odd) {
     background-color: #FFCE9E;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.board-row:nth-of-type(odd) .square:nth-of-type(even) {
+.square:nth-child(-n + 8):nth-child(even),
+.square:nth-child(n + 8):nth-child(-n + 16):nth-child(odd),
+.square:nth-child(n + 17):nth-child(-n + 24):nth-child(even),
+.square:nth-child(n + 25):nth-child(-n + 32):nth-child(odd),
+.square:nth-child(n + 33):nth-child(-n + 40):nth-child(even),
+.square:nth-child(n + 41):nth-child(-n + 48):nth-child(odd),
+.square:nth-child(n + 49):nth-child(-n + 56):nth-child(even),
+.square:nth-child(n + 57):nth-child(-n + 64):nth-child(odd) {
     background-color: #D18B47;
-}
-
-.board-row:nth-of-type(even) .square:nth-of-type(odd) {
-    background-color: #D18B47;
-}
-
-.board-row:nth-of-type(even) .square:nth-of-type(even) {
-    background-color: #FFCE9E;
 }
 
 .board {
-    display: inline-block !important;
-    margin: 0 auto !important;
-    padding: 3px !important;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
 }
 
 .board-rotate {
@@ -45,7 +36,7 @@
 .token {
     width: 50%;
     height: 50%;
-    border-radius: 100%;
+    border-radius: 50%;
     display: inline-block;
     box-sizing: content-box;
 }
@@ -58,10 +49,6 @@
 .token.token-white {
     background-color: white;
     border: 5px solid #dfdfdfbd;
-}
-
-.board-rotate .token {
-    margin-top: 5px;
 }
 
 .possibility {
@@ -90,4 +77,10 @@
 
 .anti-rotate {
     transform: rotate(-180deg);
+}
+
+@media (max-width: 991px) {
+    .board {
+        margin-bottom: 20px;
+    }
 }
