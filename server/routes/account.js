@@ -75,7 +75,7 @@ async function getGames(uid, offset) {
     })
 
     return games.map(x => ({
-        players: [x.whitePlayer.username, x.blackPlayer.username],
+        players: [x.whitePlayer?.username || "[Deleted User]", x.blackPlayer?.username || "[Deleted User]"],
         result: x.winner === '0' ? 'Playing' : x.winner === '1' ? x.whitePlayer.username + ' Won' : x.blackPlayer.username + ' Won',
         opponent: x.white == uid ? x.blackPlayer.username : x.whitePlayer.username,
         started: x.started,
